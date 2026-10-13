@@ -1,0 +1,70 @@
+@use '@/styles/mixins' as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 48px;
+  padding: var(--s-3) var(--s-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: var(--fs-base);
+  line-height: 1.2;
+  transition:
+    background-color 0.25s var(--ease-out),
+    color 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out);
+}
+
+.arrow {
+  width: 16px;
+  height: 16px;
+  flex: none;
+
+  @include motion {
+    transition: transform 0.3s var(--ease-out);
+  }
+}
+
+.button:hover .arrow,
+.button:focus-visible .arrow {
+  transform: translateX(4px);
+}
+
+.primary {
+  background: var(--lime);
+  color: var(--ink);
+
+  &:hover { background: var(--paper); }
+}
+
+.ghost {
+  border-color: var(--night-700);
+  color: var(--paper);
+
+  &:hover {
+    border-color: var(--lime);
+    color: var(--lime);
+  }
+}
+
+.ink {
+  background: var(--ink);
+  color: var(--paper);
+
+  &:hover {
+    background: var(--lime);
+    color: var(--ink);
+  }
+}
+
+.outlineInk {
+  border-color: var(--ink);
+  color: var(--ink);
+
+  &:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+}

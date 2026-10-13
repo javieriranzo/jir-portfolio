@@ -1,0 +1,140 @@
+@use '@/styles/mixins' as *;
+
+.bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+.scrolled {
+  background: rgb(10 17 32 / 0.86);
+  border-bottom-color: var(--night-800);
+  backdrop-filter: blur(10px);
+}
+
+.inner {
+  @include container;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.mark {
+  width: 22px;
+  height: 22px;
+  padding: 3px;
+  background: var(--lime);
+  color: var(--ink);
+  border-radius: var(--radius);
+}
+
+.links {
+  display: none;
+
+  @include from($bp-md) {
+    display: flex;
+    gap: var(--s-6);
+  }
+}
+
+.link {
+  @include mono-label;
+  position: relative;
+  padding-block: var(--s-2);
+  color: var(--paper-dim);
+  transition: color 0.2s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 2px;
+    height: 1px;
+    background: var(--lime);
+    transform: scaleX(0);
+    transform-origin: left;
+
+    @include motion {
+      transition: transform 0.3s var(--ease-out);
+    }
+  }
+
+  &:hover {
+    color: var(--paper);
+
+    &::after { transform: scaleX(1); }
+  }
+}
+
+.toggle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-right: calc(var(--s-3) * -1);
+  background: none;
+  border: 0;
+  color: var(--paper);
+  cursor: pointer;
+
+  @include from($bp-md) { display: none; }
+}
+
+.burger,
+.burger::before {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.25s var(--ease-out);
+}
+
+.burger {
+  position: relative;
+  transform: translateY(-3px);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+  }
+}
+
+.toggle[aria-expanded='true'] .burger {
+  transform: translateY(0) rotate(45deg);
+
+  &::before { transform: translateY(-7px) rotate(-90deg); }
+}
+
+@media (max-width: #{$bp-md - 1px}) {
+  .links.open {
+    position: fixed;
+    inset: 68px 0 auto;
+    display: grid;
+    gap: var(--s-1);
+    padding: var(--s-4) var(--gutter) var(--s-6);
+    background: var(--night-950);
+    border-bottom: 1px solid var(--night-800);
+
+    .link {
+      display: block;
+      padding-block: var(--s-3);
+      font-size: var(--fs-sm);
+      color: var(--paper);
+    }
+  }
+}

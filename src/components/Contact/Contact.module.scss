@@ -1,0 +1,80 @@
+@use '@/styles/mixins' as *;
+
+.section {
+  padding-block: var(--section-y);
+}
+
+.inner { @include container; }
+
+.paths {
+  display: grid;
+  gap: var(--s-5);
+
+  @include from($bp-md) {
+    grid-template-columns: 7fr 5fr;
+    align-items: end;
+  }
+}
+
+.path {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-4);
+  padding: var(--s-6);
+  border-radius: var(--radius);
+
+  @include from($bp-md) { padding: var(--s-7); }
+}
+
+.lime {
+  background: var(--lime);
+  color: var(--ink);
+
+  @include from($bp-md) { min-height: 420px; align-content: end; }
+
+  .label { color: var(--ink); }
+
+  .text { color: rgb(10 17 32 / 0.78); }
+
+  :focus-visible { outline-color: var(--ink); }
+}
+
+.outline {
+  border: 1px solid var(--night-700);
+
+  .label { color: var(--lime); }
+
+  .text { color: var(--paper-dim); }
+}
+
+.label { @include mono-label; }
+
+.title {
+  font-size: var(--fs-xl);
+  max-width: 16ch;
+}
+
+.text {
+  max-width: 42ch;
+  margin-bottom: var(--s-3);
+}
+
+.alt {
+  margin-top: var(--s-7);
+  color: var(--paper-dim);
+}
+
+.link {
+  color: var(--paper);
+  background: linear-gradient(var(--lime), var(--lime)) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 2px;
+
+  @include motion {
+    transition: background-size 0.3s var(--ease-out), color 0.2s;
+  }
+
+  &:hover {
+    color: var(--ink);
+    background-size: 100% 100%;
+  }
+}

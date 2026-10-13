@@ -1,0 +1,142 @@
+@use '@/styles/mixins' as *;
+
+.section {
+  padding-block: var(--section-y);
+  background: var(--paper);
+  color: var(--ink);
+  border-top: 1px solid rgb(10 17 32 / 0.12);
+
+  em { color: var(--lime-ink); }
+
+  ::selection { background: var(--ink); color: var(--paper); }
+
+  :focus-visible { outline-color: var(--ink); }
+}
+
+.inner { @include container; }
+
+.notice {
+  @include mono-label;
+  display: inline-flex;
+  gap: var(--s-2);
+  margin-bottom: var(--s-6);
+  padding: var(--s-2) var(--s-3);
+  border: 1px dashed var(--ink-dim);
+  color: var(--ink-dim);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.list {
+  border-top: 1px solid var(--ink);
+}
+
+.case {
+  position: relative;
+  display: grid;
+  gap: var(--s-5);
+  padding-block: var(--s-7);
+  border-bottom: 1px solid rgb(10 17 32 / 0.18);
+
+  // Marcador que crece al pasar el cursor.
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -1px;
+    height: 3px;
+    width: 100%;
+    background: var(--lime-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+
+    @include motion {
+      transition: transform 0.5s var(--ease-out);
+    }
+  }
+
+  &:hover::before { transform: scaleX(1); }
+
+  @include from($bp-md) {
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: var(--s-5);
+  }
+}
+
+.head {
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+
+  @include from($bp-md) { grid-column: 1 / span 4; }
+}
+
+.index {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-dim);
+}
+
+.badge {
+  padding: 1px var(--s-2);
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.68rem;
+}
+
+.title {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+
+.sector {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--lime-ink);
+}
+
+.fields {
+  display: grid;
+  gap: var(--s-5);
+
+  @include from($bp-sm) { grid-template-columns: 1fr 1fr; }
+
+  @include from($bp-md) { grid-column: 6 / -1; }
+}
+
+.field {
+  dt {
+    @include mono-label;
+    margin-bottom: var(--s-1);
+    color: var(--ink-dim);
+  }
+
+  dd { max-width: 36ch; }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+
+  @include from($bp-md) { grid-column: 6 / -1; }
+
+  li {
+    padding: 2px var(--s-2);
+    background: var(--paper-2);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+  }
+}
+
+.draft {
+  .title,
+  .field dd {
+    color: var(--ink-dim);
+  }
+}
