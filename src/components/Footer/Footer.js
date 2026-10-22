@@ -1,7 +1,10 @@
-import { site } from '@/utils/content';
+import { site } from '@/content/shared';
+import { useContent } from '@/utils/i18n';
 import styles from './Footer.module.scss';
 
 export default function Footer() {
+  const { ui } = useContent();
+
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
@@ -10,7 +13,7 @@ export default function Footer() {
             © {new Date().getFullYear()} {site.fullName}
           </p>
           <a href="#contenido" className={styles.top}>
-            Volver arriba
+            {ui.backToTop}
           </a>
         </div>
       </div>

@@ -181,7 +181,7 @@
 // Formación: banda de papel más oscuro a todo el ancho, para separarla de la experiencia.
 // La sombra extiende el fondo fuera del contenedor sin provocar scroll horizontal.
 // Cada sección tiene su propio fondo: presentación en verde pálido, experiencia en papel,
-// formación en papel oscuro, aficiones en mantequilla y contacto en petróleo oscuro.
+// formación en papel oscuro, proyectos en mantequilla y contacto en petróleo oscuro.
 .band {
   --band: var(--paper-2);
   border-top: 0;
@@ -206,10 +206,62 @@
   }
 }
 
+// La ubicación y los años comparten la primera fila; el título y el centro, debajo, usan
+// todo el ancho.
 .degree {
   @include sheet;
-  // La marca de agua (z-index -1) queda sobre el papel pero bajo el texto.
-  isolation: isolate;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--s-4);
+
+  > :not(.years, .location, .marks) { grid-column: 1 / -1; }
+}
+
+// Periodo en la esquina superior derecha, en verde botella: año de inicio y de fin unidos
+// por un tramo con un punto en cada extremo, como un trozo de línea temporal.
+.years {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  align-self: start;
+  font-family: var(--font-display);
+  font-stretch: 78%;
+  font-weight: 700;
+  font-size: clamp(1.45rem, 1.25rem + 0.8vw, 1.8rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--bottle);
+  white-space: nowrap;
+
+  > span {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.yearsLine {
+  position: relative;
+  width: 44px;
+  height: 2.5px;
+  margin-inline: var(--s-2);
+  background: var(--bottle);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--bottle);
+    border-radius: 50%;
+    background: var(--sheet);
+    translate: 0 -50%;
+  }
+
+  &::before { left: -5px; }
+  &::after { right: -5px; background: var(--bottle); }
 }
 
 .marks {
@@ -219,24 +271,6 @@
 .location {
   @include location-pill;
   justify-self: start;
-}
-
-// Periodo como marca de agua: los años enormes y casi transparentes al fondo del pliego.
-.stamp {
-  position: absolute;
-  z-index: -1;
-  right: var(--s-5);
-  bottom: var(--s-4);
-  font-family: var(--font-display);
-  font-stretch: 78%;
-  font-weight: 750;
-  font-size: clamp(3.5rem, 2rem + 5vw, 6.5rem);
-  line-height: 0.8;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  color: color-mix(in srgb, var(--ink) 12%, transparent);
-  pointer-events: none;
 }
 
 .degreeTitle {
@@ -400,72 +434,172 @@
   padding-inline: var(--s-3);
 }
 
-// «Fuera del horario laboral»: las aficiones como un informe de casos de prueba.
+// Proyectos: los destacados en tarjetas con el pliego de la formación.
 
-.cases {
+.suites {
   display: grid;
-  border-top: 1px solid var(--ink);
-}
+  gap: var(--s-5);
 
-.case {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--s-2) var(--s-4);
-  align-items: start;
-  padding-block: var(--s-5);
-  border-bottom: 1px solid var(--rule);
-
-  @include from($bp-sm) {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+  @include from($bp-md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-.caseIcon {
-  font-size: 2rem;
-  line-height: 1;
+// Fase arriba; debajo, el título y la descripción.
+.suite {
+  @include sheet;
+}
+
+// Fase del proyecto: un piloto de semáforo, su emoji y, en algunas, un acabado propio de la
+// pastilla. El piloto parpadea a un ritmo distinto según la fase: rápido en desarrollo,
+// pausado en producción y fijo en las que no se mueven. Sin movimiento, se queda encendido.
+.status {
+  @include location-pill;
+  justify-self: start;
+  padding-inline: var(--s-3);
+  font-weight: 500;
+
+  &[data-status]::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--light);
+    box-shadow: 0 0 6px var(--light);
+  }
+
+  // La animación va en cada fase y no en una variable: CSS Modules renombra los @keyframes
+  // y solo reescribe el nombre dentro de `animation`.
+  &[data-status='archived'] { --light: var(--rule); color: var(--ink-dim); border-color: var(--rule); }
+
+  // En desarrollo, al estilo de una valla de obras: relleno amarillo y un borde grueso con
+  // franjas amarillas y negras, para que el texto se lea sobre liso.
+  &[data-status='development'] {
+    --light: #e04e00;
+    // Lado de la tesela de las franjas: un periodo en diagonal, para que al moverlas no haya corte.
+    --stripe: calc(10px * 1.41421);
+    padding: 0 calc(var(--s-3) - 2px);
+    border: 3px solid transparent;
+    background:
+      linear-gradient(#ffd400, #ffd400) padding-box,
+      repeating-linear-gradient(-45deg, var(--ink) 0 5px, #ffd400 5px 10px) 0 0 / var(--stripe) var(--stripe) border-box;
+    font-weight: 600;
+  }
+
+  // Idea, con un destello blanco que recorre el contorno sin parar, como una chispa de
+  // inspiración. Sin movimiento, el destello se queda quieto en una esquina.
+  &[data-status='idea'] {
+    --light: #fff3a8;
+    padding: 0 calc(var(--s-3) - 2px);
+    border: 3px solid transparent;
+    background:
+      linear-gradient(#3fd0c9, #3fd0c9) padding-box,
+      conic-gradient(from var(--spark), #0e7c78 0 65%, #fff 82%, #0e7c78 100%) border-box;
+    font-weight: 600;
+  }
+
+  // En mantenimiento, como una placa metálica atornillada: borde gris oscuro liso con un
+  // remache en cada extremo. Un reflejo cruza la placa de vez en cuando.
+  &[data-status='maintenance'] {
+    --light: var(--bottle);
+    --rivet: radial-gradient(circle, #e6e8eb 0 1.4px, #2b303a 1.6px 2px, transparent 2.2px);
+    padding: 0 calc(var(--s-3) - 3px);
+    border: 4px solid transparent;
+    background:
+      linear-gradient(#c9cdd3, #c9cdd3) padding-box,
+      var(--rivet) left 0 center / 4px 4px no-repeat border-box,
+      var(--rivet) right 0 center / 4px 4px no-repeat border-box,
+      linear-gradient(90deg, transparent, rgb(255 255 255 / 0.7), transparent) -70% 0 / 40% 100% no-repeat border-box,
+      linear-gradient(#4a5160, #4a5160) border-box;
+    font-weight: 600;
+  }
+
+  // Pausado, como una señal de STOP: aro blanco liso dentro de un perfil rojo.
+  &[data-status='paused'] {
+    --light: #fff;
+    padding: 0 calc(var(--s-3) - 2px);
+    border: 3px solid #fff;
+    background: #d93025;
+    box-shadow: 0 0 0 1.5px #d93025;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  // En producción, con un borde a cuadros como la bandera de meta: el proyecto ya ha llegado.
+  &[data-status='production'] {
+    --light: #2e9e44;
+    padding: 0 calc(var(--s-3) - 3px);
+    border: 4px solid transparent;
+    background:
+      linear-gradient(var(--lime), var(--lime)) padding-box,
+      repeating-conic-gradient(var(--ink) 0 25%, #fff 0 50%) 0 0 / 4px 4px border-box;
+    font-weight: 600;
+  }
 
   @include motion {
-    transition: rotate 0.3s var(--ease-out), scale 0.3s var(--ease-out);
+    &[data-status='idea'] { animation: spark 2.4s linear infinite; }
+    &[data-status='development'] { animation: march 0.8s linear infinite; }
+    &[data-status='production'] { animation: flag 0.5s steps(2) infinite; }
+    &[data-status='maintenance'] { animation: sheen 3.5s ease-in-out infinite; }
+    &[data-status='paused'] { animation: alarm 1.8s ease-in-out infinite; }
+    &[data-status='idea']::before { animation: blink 2.4s ease-in-out infinite; }
+    &[data-status='development']::before { animation: blink 0.9s steps(1) infinite; }
+    &[data-status='production']::before { animation: glow 2s ease-in-out infinite; }
+    &[data-status='maintenance']::before { animation: glow 3s ease-in-out infinite; }
+    &[data-status='paused']::before { animation: blink 1.8s steps(1) infinite; }
   }
-
-  .case:hover & {
-    rotate: -12deg;
-    scale: 1.15;
-  }
 }
 
-.caseId {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink-dim);
+// Ángulo del destello de «Idea». Registrado para que se pueda animar.
+@property --spark {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 45deg;
 }
 
-.caseTitle {
-  @include display;
-  font-size: var(--fs-md);
+// Destello: da la vuelta completa al contorno.
+@keyframes spark {
+  to { --spark: 405deg; }
 }
 
-.caseText {
+// Franjas de obra que avanzan: se desplazan una tesela y vuelven a empezar sin corte.
+@keyframes march {
+  to { background-position: 0 0, var(--stripe) 0; }
+}
+
+// Bandera de meta ondeando: los cuadros saltan una casilla y vuelven.
+@keyframes flag {
+  to { background-position: 0 0, 4px 0; }
+}
+
+// Reflejo metálico que cruza la placa y descansa antes de volver a pasar.
+@keyframes sheen {
+  0%, 15% { background-position: 0 0, left 0 center, right 0 center, -70% 0, 0 0; }
+  60%, 100% { background-position: 0 0, left 0 center, right 0 center, 170% 0, 0 0; }
+}
+
+// Aviso de STOP: un halo rojo crece alrededor del aro y se desvanece.
+@keyframes alarm {
+  0%, 100% { box-shadow: 0 0 0 1.5px #d93025; }
+  50% { box-shadow: 0 0 0 1.5px #d93025, 0 0 0 5px rgb(217 48 37 / 0.3); }
+}
+
+// Parpadeo de semáforo: el piloto se apaga y se enciende.
+@keyframes blink {
+  50% { opacity: 0.2; box-shadow: none; }
+}
+
+// Latido: el halo del piloto crece y se desvanece, como un equipo en marcha.
+@keyframes glow {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--light) 70%, transparent); }
+  100% { box-shadow: 0 0 0 6px transparent; }
+}
+
+.suiteTitle {
+  @include sheet-title;
+}
+
+.suiteText {
   max-width: 52ch;
-  margin-top: var(--s-1);
   color: var(--ink-dim);
-}
-
-// Resultado del caso, en lima como un test en verde.
-.status {
-  grid-column: 2;
-  justify-self: start;
-  padding: var(--s-1) var(--s-3);
-  border: 1px solid var(--ink);
-  border-radius: 999px;
-  background: var(--lime);
-  font-size: 0.8rem;
-  font-weight: 600;
-  white-space: nowrap;
-
-  @include from($bp-sm) {
-    grid-column: 3;
-  }
 }

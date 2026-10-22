@@ -17,18 +17,15 @@ const flags = {
       <rect width="6" height="20" fill="#0057B8" />
     </>
   ),
+  // Lo que se sale de las diagonales lo recorta el propio <svg>; sin clipPath no hay ids que
+  // se repitan cuando la bandera sale varias veces en la página.
   en: (
     <>
-      <clipPath id="flag-en">
-        <rect width="30" height="20" />
-      </clipPath>
-      <g clipPath="url(#flag-en)">
-        <rect width="30" height="20" fill="#012169" />
-        <path d="M0 0L30 20M30 0L0 20" stroke="#fff" strokeWidth="4" />
-        <path d="M0 0L30 20M30 0L0 20" stroke="#C8102E" strokeWidth="1.6" />
-        <path d="M15 0v20M0 10h30" stroke="#fff" strokeWidth="6" />
-        <path d="M15 0v20M0 10h30" stroke="#C8102E" strokeWidth="3.6" />
-      </g>
+      <rect width="30" height="20" fill="#012169" />
+      <path d="M0 0L30 20M30 0L0 20" stroke="#fff" strokeWidth="4" />
+      <path d="M0 0L30 20M30 0L0 20" stroke="#C8102E" strokeWidth="1.6" />
+      <path d="M15 0v20M0 10h30" stroke="#fff" strokeWidth="6" />
+      <path d="M15 0v20M0 10h30" stroke="#C8102E" strokeWidth="3.6" />
     </>
   ),
 };
