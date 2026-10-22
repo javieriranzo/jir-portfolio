@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { experience } from '@/utils/content';
 import Copy from '@/components/Copy/Copy';
+import { useContent } from '@/utils/i18n';
 import styles from './Timeline.module.scss';
-
-// De la etapa actual a la más antigua.
-const stages = [...experience].reverse();
 
 // Cada etapa es un pliego de pruebas de imprenta colgado de una línea temporal con el
 // año de inicio. En escritorio se alternan a izquierda y derecha y cada pliego empieza
@@ -14,6 +11,9 @@ const stages = [...experience].reverse();
 // aparecen su nodo, su rama y su pliego. Sin JavaScript o con movimiento reducido,
 // todo se ve desde el principio.
 export default function Timeline() {
+  const { ui, experience } = useContent();
+  // De la etapa actual a la más antigua.
+  const stages = [...experience].reverse();
   const list = useRef(null);
   // null: sin animar (render del servidor); si no, cuántas etapas se han mostrado.
   const [shown, setShown] = useState(null);
@@ -23,7 +23,7 @@ export default function Timeline() {
     const animate =
       'IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!animate) {
-      setShown(stages.length);
+      setShown(list.current.children.length);
       return undefined;
     }
 
@@ -87,7 +87,7 @@ export default function Timeline() {
               <span className={styles.marks} aria-hidden="true">
                 <i /><i /><i /><i />
               </span>
-              <ul className={styles.locations} aria-label="Ubicación">
+              <ul className={styles.locations} aria-label={ui.location}>
                 {stage.location.map((city) => (
                   <li key={city} className={styles.location}>
                     <span className={styles.pin} aria-hidden="true">📍</span>
@@ -115,14 +115,14 @@ export default function Timeline() {
                 // Muchas competencias: cinco destacadas a la vista y el resto, agrupadas y
                 // plegadas, para que el pliego siga siendo compacto.
                 <div className={styles.skills}>
-                  <ToolList label="Competencias destacadas" tools={highlights(stage)} />
+                  <ToolList label={ui.highlights} tools={highlights(stage)} />
                   <details className={styles.more}>
                     <summary
                       className={styles.summary}
                       style={stage.brand && { '--brand': stage.brand.bg, '--brand-fg': stage.brand.fg }}
                     >
                       <span className={styles.summaryIcon} aria-hidden="true">🧰</span>
-                      Ver las {tools.reduce((total, { items }) => total + items.length, 0)} competencias
+                      {ui.allSkills(tools.reduce((total, { items }) => total + items.length, 0))}
                     </summary>
                     {tools.map(({ group, items }, j) => (
                       <div key={group} className={styles.group} style={{ '--g': j }}>
@@ -134,7 +134,7 @@ export default function Timeline() {
                 </div>
               ) : (
                 <div className={styles.skills}>
-                  <ToolList label="Herramientas" tools={tools} />
+                  <ToolList label={ui.tools} tools={tools} />
                 </div>
               )}
             </div>

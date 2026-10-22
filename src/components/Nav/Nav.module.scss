@@ -81,6 +81,45 @@
   }
 }
 
+// Selector de idioma: tres banderas pequeñas; las de los otros idiomas, apagadas, y la del
+// actual, encendida sobre una pastilla lima. En escritorio va al final de la isla, tras un
+// punto separador; en móvil, entre la firma y el botón del menú.
+.languages {
+  display: flex;
+  gap: 2px;
+
+  @include from($bp-md) {
+    order: 1;
+    align-items: center;
+
+    &::before {
+      content: '·';
+      margin-inline: var(--s-1) var(--s-2);
+      color: var(--night-dim);
+    }
+  }
+}
+
+.language {
+  display: grid;
+  place-items: center;
+  padding: 6px var(--s-2);
+  border-radius: 999px;
+  transition: background-color 0.25s var(--ease-out);
+
+  &[aria-current] { background: var(--lime); }
+}
+
+.flag {
+  display: block;
+  border-radius: 2px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+
+  .language:hover &,
+  .language[aria-current] & { opacity: 1; }
+}
+
 .toggle {
   display: grid;
   place-items: center;
