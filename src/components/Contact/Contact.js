@@ -1,62 +1,56 @@
+import { useState } from 'react';
 import { contact, site } from '@/utils/content';
-import SectionHeader from '@/components/SectionHeader/SectionHeader';
-import Button from '@/components/Button/Button';
 import styles from './Contact.module.scss';
 
 function mailto(subject) {
   return `mailto:${site.email}?subject=${encodeURIComponent(subject)}`;
 }
 
-function Path({ path, variant, delay }) {
-  return (
-    <article
-      id={path.id}
-      className={`${styles.path} ${styles[variant]}`}
-      aria-labelledby={`${path.id}-title`}
-      data-reveal
-      style={{ '--reveal-delay': delay }}
-    >
-      <p className={styles.label}>{path.label}</p>
-      <h3 id={`${path.id}-title`} className={styles.title}>
-        {path.title}
-      </h3>
-      <p className={styles.text}>{path.text}</p>
-      <Button href={mailto(path.subject)} variant={variant === 'lime' ? 'ink' : 'primary'}>
-        {path.cta}
-      </Button>
-    </article>
-  );
-}
-
 export default function Contact() {
+  const [topicId, setTopicId] = useState(contact.topics[0].id);
+  const topic = contact.topics.find((item) => item.id === topicId);
+
   return (
     <section id="contacto" className={styles.section} aria-labelledby="contacto-title">
+      {/* Marca de agua: un buzón, enorme y casi transparente, al fondo de la sección. */}
+      <p className={styles.watermark} aria-hidden="true">
+        📬
+      </p>
       <div className={styles.inner}>
-        <SectionHeader
-          index="05"
-          label="Contacto"
-          id="contacto-title"
-          title={<>¿Lo dejamos <em>en verde</em>?</>}
-          intro="Elige el camino que mejor encaja contigo. Ambos llegan a mi bandeja de entrada, con el contexto adecuado."
-        />
-
-        <div className={styles.paths}>
-          <Path path={contact.empresas} variant="lime" delay="0ms" />
-          <Path path={contact.particulares} variant="outline" delay="100ms" />
+        <div className={styles.intro}>
+          <h2 id="contacto-title" className={styles.title}>
+            ¿Hablamos?
+          </h2>
+          <p className={styles.text}>
+            Escríbeme si tienes un proyecto entre manos, quieres que colaboremos o crees que encajo en tu
+            equipo. Con un par de líneas de contexto es suficiente.
+          </p>
         </div>
 
-        <p className={styles.alt} data-reveal>
-          También en{' '}
-          <a href={site.linkedin} className={styles.link} target="_blank" rel="noopener noreferrer">
-            LinkedIn
-            <span className="visually-hidden"> (se abre en una pestaña nueva)</span>
+        <div className={styles.compose}>
+          <fieldset className={styles.topics}>
+            <legend className={styles.legend}>¿De qué quieres hablar?</legend>
+            <div className={styles.options}>
+              {contact.topics.map((item) => (
+                <label key={item.id} className={styles.option}>
+                  <input
+                    type="radio"
+                    name="tema"
+                    value={item.id}
+                    checked={item.id === topicId}
+                    onChange={() => setTopicId(item.id)}
+                  />
+                  <span>{item.label}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <a href={mailto(topic.subject)} className={styles.write}>
+            <span aria-hidden="true">✉️</span>
+            Escribir un email
           </a>
-          {' '}o directamente en{' '}
-          <a href={`mailto:${site.email}`} className={styles.link}>
-            {site.email}
-          </a>
-          .
-        </p>
+        </div>
       </div>
     </section>
   );

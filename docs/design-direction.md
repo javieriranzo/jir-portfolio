@@ -1,103 +1,72 @@
-# Dirección artística — Portfolio Senior QA Engineer
+# Dirección artística: portfolio personal de Javier Iranzo
 
-## 1. Tres conceptos
+## 1. Qué fallaba en la versión anterior
 
-### A · «Informe de ejecución» (elegido)
-La web se lee como un informe de calidad editorial: anotaciones en monoespaciada,
-identificadores de sección tipo suite (`§01 · problemas`), casos de prueba que pasan de
-✕ a ✓, y un pipeline que se ilumina al avanzar. El verde lima **no es decoración**:
-significa «en verde», el estado que un QA persigue. El blanco cálido aporta el tono
-editorial (papel, revista técnica) y el azul noche, la seriedad.
+La web «Informe de ejecución» estaba bien construida, pero hablaba como una consultora:
 
-- **Fortalezas**: el lenguaje visual *es* el oficio; cada gráfico comunica método.
-  Sirve a empresas (rigor) y a particulares (claridad, «te lo explico en verde o rojo»).
-- **Riesgo**: caer en la estética de terminal. Se mitiga con tipografía display
-  expresiva, serif itálica para acentos y mucho espacio negativo.
+- **Discurso de captación**: «Problemas que resuelvo», «Servicios», CTA «Soy una empresa / Soy
+  particular». El visitante tenía que clasificarse como cliente antes de saber quién era yo.
+- **Ninguna presencia personal**: sin «sobre mí», sin trayectoria y sin proyectos reales. Solo había
+  casos de estudio de plantilla.
+- **Estética de terminal**: monoespaciada en todas las etiquetas, índices `§01`, «build: passing»,
+  un *run log* simulado… Era el lenguaje de la herramienta, no el de la persona.
+- **Recursos genéricos**: etiquetas en mayúsculas sobre cada titular, una palabra en serif itálica
+  en cada título, flecha en cada botón y *fade-up* en cada bloque.
 
-### B · «Plano técnico»
-Estética de blueprint: retícula milimetrada, cotas, coordenadas, diagramas de
-arquitectura. Muy preciso, pero frío y más próximo a un arquitecto de software que a
-alguien que protege la experiencia del usuario final. Poco cálido para particulares.
+Se conserva lo que funcionaba: la estructura técnica (pages router, SCSS modules, contenido
+centralizado en `content.js`), Bricolage Grotesque, el azul noche y el lima, el método en cuatro
+pasos, la accesibilidad (skip link, foco visible, `prefers-reduced-motion`) y el contacto por `mailto`.
 
-### C · «Señal y ruido»
-Oscuro inmersivo, formas de onda, glitch controlado: el bug como ruido y el QA como
-filtro. Memorable, pero exige animación continua (coste de rendimiento y de
-accesibilidad) y el glitch transmite inestabilidad, lo contrario de lo que se vende.
+## 2. Concepto: «corrector de pruebas»
 
-**Decisión: A.** Es el único concepto en el que la metáfora visual coincide con la
-promesa comercial (software que se comporta como se prometió), escala bien a móvil y
-apenas necesita movimiento continuo.
+En español, *pruebas* son también las galeradas de imprenta que un corrector revisa antes de
+imprimir. El trabajo de QA es el mismo oficio con otro papel: encontrar el error antes de la tirada.
 
-## 2. Paleta
+La web adopta las marcas del corrector como lenguaje visual. Son marcas que aportan información, no
+decoración:
 
-| Token           | Valor      | Uso |
-|-----------------|------------|-----|
-| `--night-950`   | `#0A1120`  | Fondo principal |
-| `--night-900`   | `#0F1A2E`  | Superficies elevadas |
-| `--night-700`   | `#22314F`  | Bordes, reglas |
-| `--paper`       | `#F3EFE6`  | Texto sobre noche · fondo de secciones editoriales |
-| `--paper-2`     | `#E9E3D6`  | Etiquetas y fondos secundarios sobre papel |
-| `--paper-dim`   | `#A9B1C2`  | Texto secundario sobre noche (8,8:1) |
-| `--ink`         | `#0A1120`  | Texto sobre papel |
-| `--ink-dim`     | `#4A5469`  | Texto secundario sobre papel (6,6:1) |
-| `--lime`        | `#C8F542`  | Estado «pass», CTA principal, foco |
-| `--lime-ink`    | `#4D6B00`  | Lima legible sobre papel (5,3:1) |
-| `--fail`        | `#FF6B57`  | Solo para estados «fail» ilustrativos |
+- **Tachado y corrección a lápiz** en el titular del inicio: «~~después~~ *antes* que tus usuarios».
+  Es el único momento animado de la web.
+- **Notas al margen** en serif itálica azul: la voz que comenta y opina junto al texto.
+- **Marcas de corte** alrededor de las imágenes, como en un pliego. Al pasar el cursor se cierran
+  sobre la imagen.
+- **Fluorescente lima** para subrayar lo que se señala (enlaces al pasar el cursor, selección).
 
-Regla: el lima nunca se usa como texto sobre papel (contraste insuficiente);
-se usa `--lime-ink`.
+## 3. Paleta
 
-## 3. Tipografía
+| Token        | Valor     | Uso |
+|--------------|-----------|-----|
+| `--paper`    | `#EDEFEA` | Fondo: papel frío, no crema |
+| `--paper-2`  | `#E1E4DC` | Huecos de imagen |
+| `--rule`     | `#C5CAC0` | Filetes |
+| `--ink`      | `#0A1120` | Texto (el azul noche anterior) |
+| `--ink-dim`  | `#4A5469` | Texto secundario |
+| `--pencil`   | `#2340E0` | Lápiz azul del corrector: correcciones, notas, foco |
+| `--lime`     | `#C8F542` | Fluorescente; nunca como color de texto sobre papel |
+| `--night`    | `#0A1120` | Banda de contacto y pie |
 
-- **Display / cuerpo**: *Bricolage Grotesque* (variable): grotesca con carácter y
-  ópticas variables; firme en titulares y legible en cuerpo.
-- **Acento editorial**: *Instrument Serif* itálica: una o dos palabras por titular.
-- **Meta / técnico**: *JetBrains Mono*: etiquetas, IDs, estados, datos de casos.
+En la banda oscura, `--pencil` pasa a `--lime` porque el azul no tiene contraste sobre noche.
 
-Escala fluida (clamp), ratio ~1.25 en móvil → ~1.333 en escritorio:
-`--fs-xs .78rem · --fs-sm .9rem · --fs-base 1.05rem · --fs-md 1.3rem ·
---fs-lg 1.75rem · --fs-xl 2.6rem · --fs-2xl 4rem · --fs-hero 6.5rem` (máximos).
+## 4. Tipografía
 
-## 4. Espaciado y retícula
+- **Bricolage Grotesque** (ejes `wdth` y `opsz`): todo el texto. Los titulares usan la anchura
+  estrecha (78 %) y un peso alto. Ese gesto tipográfico es el que reconoce la marca.
+- **Newsreader itálica**: solo para la voz del corrector (notas, correcciones y contenido pendiente).
 
-Base 4 px: `--s-1 4 · --s-2 8 · --s-3 12 · --s-4 16 · --s-5 24 · --s-6 32 ·
---s-7 48 · --s-8 64 · --s-9 96 · --s-10 144`.
-Retícula de 12 columnas, ancho máximo 1320 px, gutter lateral 16 px (móvil) → 48 px.
-Composición asimétrica: titulares en columnas 1–8, anotaciones desplazadas a 9–12;
-las secciones alternan alineación para generar ritmo y aire.
+Sin monoespaciada ni etiquetas en mayúsculas.
 
 ## 5. Estructura
 
-1. **Hero**: nombre + rol en mono, titular con acento serif, subtítulo, dos CTA
-   (empresas / particulares) y un *run log* que ejecuta comprobaciones de forma
-   escalonada.
-2. **§01 Problemas**: lo que falla hoy, escrito como tests en rojo; al pasar el
-   cursor o enfocarlos se muestra cómo se resuelve.
-3. **§02 Servicios**: dos columnas editoriales diferenciadas, Empresas y Particulares,
-   con lista numerada (no tarjetas).
-4. **§03 Método**: pipeline de 4 etapas que se ilumina al hacer scroll.
-5. **§04 Casos de estudio**: filas editoriales (contexto · reto · enfoque · resultado).
-   Contenido en borrador hasta completarlo con proyectos reales.
-6. **§05 Contacto**: dos caminos explícitos con asunto prellenado.
+Todo el portfolio está en una sola página, `/`, y el menú salta a cada sección:
 
-## 6. Sistema de componentes
+- Presentación («Hola, soy Javier»), datos de contacto y descarga del CV.
+- `#experiencia`: línea temporal con una tarjeta por etapa y sus competencias.
+- `#formacion`: banda de otro tono con los títulos como diplomas y los cursos e idiomas en pastillas.
+- `#aficiones`: «Fuera del horario laboral», las aficiones como casos de prueba.
+- `#contacto`: elección del tema (proyecto, colaboración, oportunidad u otra cosa), que rellena el
+  asunto del email.
 
-`Nav` · `Button` (primary · ghost · ink · outlineInk) · enlaces con subrayado que crece ·
-`SectionHeader` (índice + etiqueta mono + titular) · `useReveal` (IntersectionObserver,
-una sola vez) · `RunLog` · `Problems` · `Process` (pipeline) · `Cases` · `Contact`.
+## 6. Contenido pendiente
 
-## 7. Movimiento
-
-- Entrada del hero escalonada (etiqueta → titular por líneas → texto → CTA → run log),
-  ≤ 900 ms en total, solo `transform` y `opacity`.
-- Reveal al hacer scroll: desplazamiento de 16 px + fade, una vez por elemento.
-- Microinteracciones: flecha que avanza en botones, subrayado en enlaces, test ✕→✓.
-- `prefers-reduced-motion: reduce` → sin desplazamientos ni animaciones; todo visible
-  desde el inicio.
-- Sin librerías de animación: CSS + un único `IntersectionObserver`.
-
-## 8. Contenido pendiente (no inventado)
-
-Los casos de estudio, el email, LinkedIn y los servicios concretos están centralizados
-en `src/utils/content.js`. Los casos se muestran marcados como **borrador** hasta que
-se rellenen con proyectos reales.
+Nada se inventa. Lo que falta está en `src/utils/content.js` envuelto en `pending()`. En la web
+aparece con borde discontinuo azul, para que sea imposible publicarlo por descuido.

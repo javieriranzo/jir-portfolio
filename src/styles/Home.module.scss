@@ -1,0 +1,471 @@
+@use 'mixins' as *;
+
+.page {
+  --page-top: calc(var(--nav-h) + clamp(var(--s-7), 7vw, var(--s-9)));
+  @include container;
+  padding-top: var(--page-top);
+}
+
+// Presentación sobre una banda de otro tono, un verde muy pálido que recoge el verde botella
+// del menú. Se extiende hasta arriba (por detrás del menú) y a todo el ancho sin provocar
+// scroll horizontal.
+.intro {
+  display: grid;
+  gap: var(--s-5);
+  align-items: start;
+  // La presentación llena la primera pantalla (descontando el hueco del menú), como el resto
+  // de secciones.
+  min-height: calc(100svh - var(--page-top));
+  align-content: center;
+  padding-bottom: var(--section-y);
+  background: #dde8e5;
+  box-shadow: 0 0 0 100vmax #dde8e5;
+  clip-path: inset(-100vmax -100vmax 0);
+
+  + .section { border-top: 0; }
+
+  // Marca de agua con la firma FJIR, abajo a la izquierda por detrás del texto, apenas más
+  // oscura que la banda.
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  overflow-clip-margin: 0;
+
+  &::before {
+    content: 'FJIR';
+    position: absolute;
+    z-index: -1;
+    left: -0.04em;
+    bottom: 22%;
+    font-family: var(--font-display);
+    font-stretch: 75%;
+    font-weight: 750;
+    font-size: clamp(8rem, 2rem + 26vw, 26rem);
+    line-height: 0.8;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--ink) 9%, transparent);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  @include from($bp-md) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    // Columna derecha: la foto y, debajo, los datos de contacto y el CV.
+    // Bajo el saludo, los iconos de contacto; bajo el texto, el botón del CV.
+    grid-template-rows: auto auto auto 1fr;
+    grid-template-areas:
+      'title photo'
+      'chips photo'
+      'bio   photo'
+      'cv    photo';
+    column-gap: calc(100% / 12);
+
+    .title { grid-area: title; }
+    .bio { grid-area: bio; }
+    .chips { grid-area: chips; }
+    .cv { grid-area: cv; }
+    .photo { grid-area: photo; align-self: center; }
+  }
+}
+
+.title {
+  @include display;
+  font-size: var(--fs-hero);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+.bio {
+  display: grid;
+  gap: var(--s-3);
+  max-width: 64ch;
+  // Texto de lectura normal para que la presentación entera quepa en la primera pantalla.
+  font-size: var(--fs-base);
+  line-height: 1.5;
+}
+
+.photo {
+  max-width: 420px;
+}
+
+// Datos de contacto y descarga del CV, bajo la bio.
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+// Botón redondo con el icono de la aplicación sobre su color; se levanta al pasar el ratón,
+// igual que los botones de competencias y del CV.
+.chip {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--brand, var(--paper));
+
+  @include motion {
+    transition:
+      box-shadow 0.2s var(--ease-out),
+      translate 0.2s var(--ease-out);
+  }
+}
+
+// Descarga del CV, con el mismo formato que «Ver las XX competencias»: en el rojo de Adobe
+// Reader y, al pasar el ratón, solo se levanta, sin el relleno lima.
+.cv {
+  @include pill-button;
+  justify-self: center;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-6);
+  font-size: var(--fs-base);
+  background: #dc1f26;
+  color: #fff;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.chip:hover,
+.chip:focus-visible {
+  box-shadow: 2px 2px 0 var(--ink);
+  translate: -1px -1px;
+}
+
+.chip:active {
+  box-shadow: none;
+  translate: 0 0;
+}
+
+// Secciones de la página, cada una con su cabecera numerada encima del contenido.
+// Cada sección ocupa al menos una pantalla, como la presentación, con el contenido centrado
+// en vertical; las que tienen más contenido (Experiencia) simplemente crecen.
+.section {
+  display: grid;
+  align-content: center;
+  gap: var(--s-7);
+  min-height: 100svh;
+  padding-block: var(--section-y);
+  border-top: 1px solid var(--rule);
+}
+
+.sectionHead {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: clamp(var(--s-3), 2vw, var(--s-5));
+}
+
+// Emoji de la sección, algo inclinado; crece con el título.
+.sectionIcon {
+  font-size: clamp(2rem, 1.2rem + 2.4vw, 3.5rem);
+  line-height: 1;
+  rotate: -6deg;
+}
+
+.sectionTitle {
+  @include display;
+  // Unos dos tercios de «Hola, soy Javier»: se distinguen sin quitarle el protagonismo.
+  font-size: clamp(2.5rem, 1.6rem + 4vw, 5.25rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+// Formación: banda de papel más oscuro a todo el ancho, para separarla de la experiencia.
+// La sombra extiende el fondo fuera del contenedor sin provocar scroll horizontal.
+// Cada sección tiene su propio fondo: presentación en verde pálido, experiencia en papel,
+// formación en papel oscuro, aficiones en mantequilla y contacto en petróleo oscuro.
+.band {
+  --band: var(--paper-2);
+  border-top: 0;
+  background: var(--band);
+  box-shadow: 0 0 0 100vmax var(--band);
+  clip-path: inset(0 -100vmax);
+
+  + .section {
+    border-top: 0;
+  }
+}
+
+.butter { --band: #f5f0d9; }
+
+// Titulaciones con el mismo pliego que las tarjetas de experiencia.
+.degrees {
+  display: grid;
+  gap: var(--s-5);
+
+  @include from($bp-md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.degree {
+  @include sheet;
+  // La marca de agua (z-index -1) queda sobre el papel pero bajo el texto.
+  isolation: isolate;
+}
+
+.marks {
+  @include crop-marks;
+}
+
+.location {
+  @include location-pill;
+  justify-self: start;
+}
+
+// Periodo como marca de agua: los años enormes y casi transparentes al fondo del pliego.
+.stamp {
+  position: absolute;
+  z-index: -1;
+  right: var(--s-5);
+  bottom: var(--s-4);
+  font-family: var(--font-display);
+  font-stretch: 78%;
+  font-weight: 750;
+  font-size: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--ink) 12%, transparent);
+  pointer-events: none;
+}
+
+.degreeTitle {
+  @include sheet-title;
+  white-space: pre-line;
+}
+
+.degreePlace {
+  @include sheet-meta;
+}
+
+// Logotipo del centro, con las mismas alturas que los de la experiencia.
+.logo {
+  width: auto;
+  height: 22px;
+}
+
+.logoTall { height: 40px; }
+
+// Cursos e idiomas, bajo los títulos.
+.extras {
+  display: grid;
+  gap: var(--s-7);
+}
+
+// Certificaciones como cintas de rótulo: una por tema, deslizándose en sentidos alternos.
+// Se paran al pasar el ratón; con movimiento reducido se quedan quietas y en varias líneas.
+.tickers {
+  display: grid;
+  border-block: 1.5px solid var(--ink);
+}
+
+.ticker {
+  display: grid;
+  border-bottom: 1px solid var(--rule);
+
+  &:last-child { border-bottom: 0; }
+
+  @include from($bp-md) {
+    grid-template-columns: 14rem minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+.tickerName {
+  padding-block: var(--s-3) 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+
+  @include from($bp-md) {
+    padding-block: 0;
+  }
+}
+
+.tickerWindow {
+  overflow: hidden;
+  // Difumina los extremos para que los cursos entren y salgan suavemente.
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.tickerTrack {
+  display: flex;
+  width: max-content;
+}
+
+.tickerList {
+  display: flex;
+
+  li {
+    @include display;
+    padding: var(--s-4) 0;
+    font-size: var(--fs-md);
+    white-space: nowrap;
+
+    // Separador entre cursos.
+    &::after {
+      content: '✦';
+      margin-inline: var(--s-4);
+      font-size: 0.6em;
+      vertical-align: middle;
+      color: var(--pencil);
+    }
+  }
+}
+
+@include motion {
+  .tickerTrack {
+    animation: ticker 60s linear infinite;
+
+    &.reverse { animation-direction: reverse; }
+
+    .ticker:hover & { animation-play-state: paused; }
+  }
+}
+
+@keyframes ticker {
+  to { translate: -50% 0; }
+}
+
+// Sin movimiento: los cursos se reparten en varias líneas y la copia sobra.
+@media (prefers-reduced-motion: reduce) {
+  .tickerWindow { mask-image: none; }
+  .tickerTrack { width: auto; }
+  .tickerList {
+    flex-wrap: wrap;
+
+    &[aria-hidden],
+    [aria-hidden] { display: none; }
+
+    li { padding-block: var(--s-2); }
+  }
+}
+
+// Idiomas: un pliego pequeño por idioma, como las tarjetas de formación, con una barra de
+// nivel que se llena en degradado.
+.languages {
+  display: grid;
+  gap: var(--s-5);
+
+  @include from($bp-sm) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.language {
+  @include sheet;
+  gap: var(--s-3);
+  padding: var(--s-5);
+}
+
+// Bandera en la esquina superior derecha del pliego.
+.languageIcon {
+  position: absolute;
+  top: var(--s-5);
+  right: var(--s-5);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--rule);
+}
+
+.languageName {
+  @include sheet-title;
+  margin-top: 0;
+}
+
+.levelBar {
+  height: 12px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  // Relleno en degradado del verde botella azulado del menú (empieza en una versión más clara
+  // para que el cambio se note) al azul noche del pie; ocupa solo la parte del nivel (--fill).
+  background: linear-gradient(90deg, #12a3a3, var(--bottle) 45%, var(--night)) no-repeat left / calc(var(--fill) * 100%) 100%;
+}
+
+// Nivel en pastilla arriba, como la ubicación en las tarjetas de experiencia y formación.
+.level {
+  @include location-pill;
+  justify-self: start;
+  padding-inline: var(--s-3);
+}
+
+// «Fuera del horario laboral»: las aficiones como un informe de casos de prueba.
+
+.cases {
+  display: grid;
+  border-top: 1px solid var(--ink);
+}
+
+.case {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-2) var(--s-4);
+  align-items: start;
+  padding-block: var(--s-5);
+  border-bottom: 1px solid var(--rule);
+
+  @include from($bp-sm) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+}
+
+.caseIcon {
+  font-size: 2rem;
+  line-height: 1;
+
+  @include motion {
+    transition: rotate 0.3s var(--ease-out), scale 0.3s var(--ease-out);
+  }
+
+  .case:hover & {
+    rotate: -12deg;
+    scale: 1.15;
+  }
+}
+
+.caseId {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-dim);
+}
+
+.caseTitle {
+  @include display;
+  font-size: var(--fs-md);
+}
+
+.caseText {
+  max-width: 52ch;
+  margin-top: var(--s-1);
+  color: var(--ink-dim);
+}
+
+// Resultado del caso, en lima como un test en verde.
+.status {
+  grid-column: 2;
+  justify-self: start;
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--lime);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+
+  @include from($bp-sm) {
+    grid-column: 3;
+  }
+}

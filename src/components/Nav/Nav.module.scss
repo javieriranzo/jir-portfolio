@@ -1,44 +1,54 @@
 @use '@/styles/mixins' as *;
 
+// La barra solo coloca la isla: no ocupa el ancho ni bloquea clics fuera de ella.
 .bar {
   position: fixed;
-  inset: 0 0 auto;
+  inset: var(--s-3) 0 auto;
   z-index: 50;
-  border-bottom: 1px solid transparent;
-  transition:
-    background-color 0.3s var(--ease-out),
-    border-color 0.3s var(--ease-out);
+  display: flex;
+  justify-content: center;
+  padding-inline: var(--gutter);
+  pointer-events: none;
 }
 
-.scrolled {
-  background: rgb(10 17 32 / 0.86);
-  border-bottom-color: var(--night-800);
-  backdrop-filter: blur(10px);
-}
-
-.inner {
-  @include container;
+// Isla flotante: cápsula oscura, del mismo azul noche que el pie, con la sombra recta de
+// los botones.
+.island {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 68px;
+  gap: var(--s-3);
+  width: 100%;
+  padding: var(--s-1) var(--s-1) var(--s-1) var(--s-5);
+  border: 1px solid var(--night-2);
+  border-radius: 999px;
+  background: var(--night);
+  color: var(--paper);
+  box-shadow: 3px 3px 0 var(--night-2);
+  pointer-events: auto;
+
+  @include from($bp-md) {
+    width: auto;
+    justify-content: flex-start;
+  }
 }
 
 .brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--s-2);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
+  font-stretch: 75%;
+  font-weight: 750;
+  font-size: var(--fs-md);
+  letter-spacing: -0.02em;
+  line-height: 1;
 
-.mark {
-  width: 22px;
-  height: 22px;
-  padding: 3px;
-  background: var(--lime);
-  color: var(--ink);
-  border-radius: var(--radius);
+  @include from($bp-md) {
+    // Punto separador entre la firma y los enlaces.
+    &::after {
+      content: '·';
+      margin-left: var(--s-3);
+      color: var(--night-dim);
+    }
+  }
 }
 
 .links {
@@ -46,37 +56,28 @@
 
   @include from($bp-md) {
     display: flex;
-    gap: var(--s-6);
+    gap: var(--s-1);
   }
 }
 
 .link {
-  @include mono-label;
-  position: relative;
-  padding-block: var(--s-2);
-  color: var(--paper-dim);
-  transition: color 0.2s;
+  display: inline-block;
+  padding: var(--s-2) var(--s-4);
+  border-radius: 999px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--night-dim);
+  transition:
+    color 0.2s,
+    background-color 0.25s var(--ease-out);
 
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 2px;
-    height: 1px;
-    background: var(--lime);
-    transform: scaleX(0);
-    transform-origin: left;
+  &:hover { color: var(--paper); }
 
-    @include motion {
-      transition: transform 0.3s var(--ease-out);
-    }
-  }
-
-  &:hover {
-    color: var(--paper);
-
-    &::after { transform: scaleX(1); }
+  // Sección en la que está el lector, en verde botella azulado.
+  &[aria-current] {
+    background: var(--bottle);
+    color: #fff;
+    font-weight: 600;
   }
 }
 
@@ -85,7 +86,6 @@
   place-items: center;
   width: 44px;
   height: 44px;
-  margin-right: calc(var(--s-3) * -1);
   background: none;
   border: 0;
   color: var(--paper);
@@ -120,20 +120,26 @@
   &::before { transform: translateY(-7px) rotate(-90deg); }
 }
 
+// Móvil: los enlaces se despliegan en otra cápsula bajo la isla.
 @media (max-width: #{$bp-md - 1px}) {
   .links.open {
-    position: fixed;
-    inset: 68px 0 auto;
+    position: absolute;
+    top: calc(100% + var(--s-2));
+    left: 0;
+    right: 0;
     display: grid;
-    gap: var(--s-1);
-    padding: var(--s-4) var(--gutter) var(--s-6);
-    background: var(--night-950);
-    border-bottom: 1px solid var(--night-800);
+    padding: var(--s-2);
+    border: 1px solid var(--night-2);
+    border-radius: 24px;
+    background: var(--night);
+    box-shadow: 3px 3px 0 var(--night-2);
 
     .link {
       display: block;
-      padding-block: var(--s-3);
-      font-size: var(--fs-sm);
+      padding: var(--s-3) var(--s-4);
+      font-size: var(--fs-md);
+      font-stretch: 78%;
+      font-weight: 650;
       color: var(--paper);
     }
   }

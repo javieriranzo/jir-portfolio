@@ -1,25 +1,25 @@
+@use 'mixins' as *;
+
 :root {
-  --night-950: #0a1120;
-  --night-900: #0f1a2e;
-  --night-800: #16233d;
-  --night-700: #22314f;
-  --paper: #f3efe6;
-  --paper-2: #e9e3d6;
-  --paper-dim: #a9b1c2;
+  --paper: #edefea;
+  --paper-2: #e1e4dc;
+  --sheet: #f7f8f5; // papel de los pliegos: un punto más claro que el fondo
+  --rule: #c5cac0;
   --ink: #0a1120;
   --ink-dim: #4a5469;
+  --pencil: #2340e0;
   --lime: #c8f542;
-  --lime-ink: #4d6b00;
-  --fail: #ff6b57;
+  --bottle: #00656b; // verde botella azulado: menú, contacto y barras de idioma
+  --night: #0a1120;
+  --night-2: #1b2842;
+  --night-dim: #a9b1c2;
 
-  --fs-xs: 0.78rem;
-  --fs-sm: 0.9rem;
-  --fs-base: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
-  --fs-md: clamp(1.15rem, 1.05rem + 0.45vw, 1.35rem);
-  --fs-lg: clamp(1.4rem, 1.2rem + 0.9vw, 1.85rem);
-  --fs-xl: clamp(1.9rem, 1.4rem + 2.2vw, 3.1rem);
-  --fs-2xl: clamp(2.4rem, 1.6rem + 3.6vw, 4.5rem);
-  --fs-hero: clamp(2.75rem, 1.4rem + 5.6vw, 6.25rem);
+  --fs-sm: 0.875rem;
+  --fs-base: clamp(1.0625rem, 1rem + 0.2vw, 1.15rem);
+  --fs-md: clamp(1.2rem, 1.1rem + 0.45vw, 1.4rem);
+  --fs-lg: clamp(1.5rem, 1.25rem + 1vw, 2.1rem);
+  --fs-xl: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+  --fs-hero: clamp(3rem, 1.6rem + 6.4vw, 8rem);
 
   --s-1: 4px;
   --s-2: 8px;
@@ -34,11 +34,11 @@
 
   --max-w: 1320px;
   --gutter: clamp(16px, 4vw, 48px);
-  --section-y: clamp(var(--s-9), 12vw, var(--s-10));
-  --radius: 2px;
+  --section-y: clamp(var(--s-8), 10vw, var(--s-10));
+  --nav-h: 64px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 *,
@@ -49,7 +49,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: 80px;
+  // Las secciones llenan la pantalla: al saltar a una, su borde superior queda arriba del
+  // todo. El menú flotante cae sobre su relleno superior, que es más alto que él.
+  scroll-padding-top: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -58,17 +60,16 @@ html {
 
 body {
   margin: 0;
-  background: var(--night-950);
-  color: var(--paper);
+  background: var(--paper);
+  color: var(--ink);
   font-family: system-ui, sans-serif;
   font-size: var(--fs-base);
-  line-height: 1.6;
-  font-optical-sizing: auto;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-h1, h2, h3, h4, p, ul, ol, dl, dd, figure {
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, blockquote {
   margin: 0;
 }
 
@@ -78,8 +79,6 @@ ul, ol {
 }
 
 h1, h2, h3 {
-  line-height: 1.02;
-  letter-spacing: -0.025em;
   font-weight: 600;
   text-wrap: balance;
 }
@@ -91,17 +90,15 @@ a {
   text-decoration: none;
 }
 
-em {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 :focus-visible {
-  outline: 2px solid var(--lime);
+  outline: 2px solid var(--pencil);
   outline-offset: 3px;
-  border-radius: var(--radius);
 }
 
 ::selection {
@@ -127,36 +124,52 @@ em {
   top: var(--s-4);
   z-index: 100;
   padding: var(--s-3) var(--s-4);
-  background: var(--lime);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
   font-weight: 600;
   transform: translateY(-200%);
 
   &:focus { transform: none; }
 }
 
-// Reveal on scroll: hidden only when JS is active and motion is allowed.
-@media (prefers-reduced-motion: no-preference) {
-  .js [data-reveal] {
-    opacity: 0;
-    transform: translateY(16px);
-    transition:
-      opacity 0.7s var(--ease-out),
-      transform 0.7s var(--ease-out);
-    transition-delay: var(--reveal-delay, 0ms);
+// Enlace de texto: subrayado fino que se convierte en trazo de fluorescente.
+.link {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  background-image: linear-gradient(var(--lime), var(--lime));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 0% 0.42em;
+
+  @include motion {
+    transition: background-size 0.35s var(--ease-out);
   }
 
-  .js [data-reveal].is-visible {
-    opacity: 1;
-    transform: none;
+  &:hover {
+    text-decoration-color: transparent;
+    background-size: 100% 0.42em;
   }
+}
+
+// Contenido que aún falta: visible a propósito para que no se publique por descuido.
+.pending {
+  @include note;
+  padding: 0 0.3em;
+  border: 1px dashed currentColor;
+  border-radius: 3px;
+  background: rgb(35 64 224 / 0.05);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  font-size: 0.95em;
+  font-stretch: normal;
+  letter-spacing: 0;
 }
 
 // Las variables de next/font viven en este contenedor, no en body.
 .app {
   --font-display: var(--font-bricolage), system-ui, sans-serif;
-  --font-serif: var(--font-instrument), Georgia, serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-serif: var(--font-newsreader), Georgia, serif;
   font-family: var(--font-display);
   overflow-x: clip;
 }

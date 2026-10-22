@@ -17,9 +17,140 @@ $bp-lg: 1200px;
   padding-inline: var(--gutter);
 }
 
-@mixin mono-label {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+// Texto principal a la izquierda y columna de anotaciones al margen desde tablet.
+@mixin with-margin {
+  display: grid;
+  gap: var(--s-6);
+
+  @include from($bp-md) {
+    grid-template-columns: minmax(0, 8fr) minmax(0, 3fr);
+    column-gap: calc(100% / 12);
+  }
 }
+
+// Titulares: Bricolage estrechada, el rasgo tipográfico de la web.
+@mixin display {
+  font-family: var(--font-display);
+  font-stretch: 78%;
+  font-weight: 650;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+// Voz del corrector: anotaciones en el margen.
+@mixin note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--pencil);
+}
+
+@mixin section-title {
+  @include display;
+  font-size: var(--fs-xl);
+}
+
+@mixin section {
+  @include container;
+  padding-block: var(--section-y);
+}
+
+// Botón pequeño en pastilla: se rellena de lima desde la izquierda y se levanta al pasar
+// el ratón. Lo usan «Ver las XX competencias» y la descarga del CV.
+@mixin pill-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: fit-content;
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: linear-gradient(var(--lime), var(--lime)) no-repeat left / 0% 100%;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 100%;
+    box-shadow: 2px 2px 0 var(--ink);
+    translate: -1px -1px;
+  }
+
+  &:active {
+    box-shadow: none;
+    translate: 0 0;
+  }
+
+  @include motion {
+    transition:
+      background-size 0.35s var(--ease-out),
+      box-shadow 0.2s var(--ease-out),
+      translate 0.2s var(--ease-out);
+  }
+}
+
+// Pliego: hoja clara con borde de tinta y otra hoja asomando detrás. Lo usan las tarjetas
+// de experiencia y de formación.
+@mixin sheet {
+  position: relative;
+  display: grid;
+  gap: var(--s-2);
+  align-content: start;
+  padding: var(--s-6) var(--s-5) var(--s-5);
+  border: 1px solid var(--ink);
+  background: var(--sheet);
+  box-shadow: 6px 6px 0 -1px var(--paper-2), 6px 6px 0 0 var(--rule);
+}
+
+// Cuatro marcas de corte en las esquinas, sobre un contenedor con cuatro <i>.
+@mixin crop-marks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  i {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border: 0 solid var(--ink-dim);
+
+    &:nth-child(1) { top: 10px; left: 10px; border-width: 1px 0 0 1px; }
+    &:nth-child(2) { top: 10px; right: 10px; border-width: 1px 1px 0 0; }
+    &:nth-child(3) { bottom: 10px; left: 10px; border-width: 0 0 1px 1px; }
+    &:nth-child(4) { bottom: 10px; right: 10px; border-width: 0 1px 1px 0; }
+  }
+}
+
+// Pastilla de ubicación, con el emoji 📍 delante.
+@mixin location-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  padding: 2px var(--s-3) 2px var(--s-2);
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+// Título de un pliego (puesto o titulación) y la línea de quién y cuándo.
+@mixin sheet-title {
+  @include display;
+  margin-top: var(--s-1);
+  font-size: var(--fs-lg);
+  line-height: 1.05;
+}
+
+@mixin sheet-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-3);
+  font-size: var(--fs-sm);
+  color: var(--ink-dim);
+}
+

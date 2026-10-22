@@ -1,0 +1,341 @@
+@use '@/styles/mixins' as *;
+
+// La trayectoria se dibuja como un esquema: un eje con un nodo por etapa y una rama
+// hasta su pliego. --line es dónde cae el eje y --dot-y, la altura de cada nodo y su
+// rama, a la altura de la primera línea del pliego.
+.timeline {
+  --gutter: 28px;
+  --line: 7px;
+  --dot-y: 46px;
+  position: relative;
+  display: grid;
+  gap: var(--s-6);
+  min-width: 0;
+  padding-left: var(--gutter);
+
+  // El eje, del primer nodo al último. Sin JavaScript llega hasta el final de la lista;
+  // con él se mide hasta el nodo de 2013 (ver más abajo).
+  &::before {
+    content: '';
+    position: absolute;
+    top: var(--dot-y);
+    bottom: 0;
+    left: var(--line);
+    border-left: 1px solid var(--ink-dim);
+  }
+
+  // Dos columnas con la línea en medio. Cada etapa ocupa dos filas y empieza una fila
+  // después de la anterior, así que las de cada lado nunca se pisan.
+  @include from($bp-md) {
+    --gutter: 144px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--gutter);
+    row-gap: var(--s-5);
+    padding-left: 0;
+
+    &::before {
+      left: 50%;
+    }
+  }
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  // Cada pliego mide lo que su contenido, aunque comparta filas con otro más largo.
+  align-self: start;
+
+  // Punto de la etapa.
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: var(--dot-y);
+    left: calc(var(--line) - var(--gutter));
+    width: 13px;
+    height: 13px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    background: var(--paper);
+    transform: translate(-50%, -50%);
+  }
+
+  // Rama del nodo a su pliego.
+  &::after {
+    content: '';
+    position: absolute;
+    top: var(--dot-y);
+    left: calc(var(--line) - var(--gutter));
+    width: calc(var(--gutter) - var(--line));
+    border-top: 1px solid var(--ink-dim);
+  }
+
+  @include from($bp-md) {
+    grid-row: var(--row) / span 2;
+
+    &::after { width: calc(var(--gutter) / 2); }
+
+    &:nth-child(odd) {
+      grid-column: 1;
+
+      &::before { left: calc(100% + var(--gutter) / 2); }
+      &::after { left: 100%; }
+    }
+
+    &:nth-child(even) {
+      grid-column: 2;
+
+      &::before,
+      &::after { left: calc(var(--gutter) / -2); }
+    }
+  }
+}
+
+// La etapa actual lleva el punto relleno de lima.
+.current::before {
+  background: var(--lime);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--lime) 35%, transparent);
+}
+
+// Año de inicio sobre la rama; en móvil no cabe y ya lo dice la línea de la empresa.
+.year {
+  display: none;
+
+  @include from($bp-md) {
+    @include display;
+    position: absolute;
+    top: var(--dot-y);
+    display: block;
+    font-size: var(--fs-md);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-dim);
+    transform: translateY(calc(-100% - var(--s-2)));
+
+    .stage:nth-child(odd) & { right: calc(-1 * var(--gutter) / 2 + var(--s-4)); }
+    .stage:nth-child(even) & { left: calc(-1 * var(--gutter) / 2 + var(--s-4)); }
+  }
+}
+
+.current .year { color: var(--ink); }
+
+.sheet {
+  @include sheet;
+  z-index: 1;
+  justify-self: stretch;
+
+  // Conector donde la rama toca el pliego.
+  &::before {
+    content: '';
+    position: absolute;
+    top: var(--dot-y);
+    left: 0;
+    width: 7px;
+    height: 7px;
+    background: var(--ink);
+    transform: translate(-50%, -50%);
+
+    @include from($bp-md) {
+      .stage:nth-child(odd) & {
+        left: auto;
+        right: 0;
+        transform: translate(50%, -50%);
+      }
+    }
+  }
+}
+
+.marks {
+  @include crop-marks;
+}
+
+.locations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+}
+
+// Cada ciudad como una pastilla, con el emoji de ubicación delante.
+.location {
+  @include location-pill;
+}
+
+.pin {
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.role {
+  @include sheet-title;
+}
+
+.place {
+  @include sheet-meta;
+}
+
+// Logotipo oficial, a la altura del texto de la empresa.
+.logo {
+  width: auto;
+  height: 22px;
+}
+
+// Los logotipos casi cuadrados necesitan más altura para leerse igual.
+.logoTall { height: 40px; }
+
+.text {
+  margin-top: var(--s-1);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+// Las herramientas cierran la hoja, debajo del texto.
+.skills {
+  display: grid;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+}
+
+// Desplegable de las skills agrupadas.
+.summary {
+  @include pill-button;
+  list-style: none;
+  // Color de la empresa de la etapa (o tinta si no tiene). Al pasar el ratón solo se levanta,
+  // sin el relleno lima del resto de botones.
+  background: var(--brand, var(--ink));
+  color: var(--brand-fg, var(--paper));
+
+  &::-webkit-details-marker { display: none; }
+
+  [open] > & { margin-bottom: var(--s-1); }
+}
+
+// Caja de herramientas delante del texto: se inclina al pasar el ratón.
+.summaryIcon {
+  display: inline-block;
+
+  @include motion {
+    transition: rotate 0.3s var(--ease-out);
+  }
+
+  .summary:hover &,
+  .summary:focus-visible & { rotate: -15deg; }
+}
+
+// Apertura de las competencias: el desplegable crece hasta su alto (donde el navegador
+// sabe animar hasta `auto`) y los grupos entran uno detrás de otro.
+.more {
+  @include motion {
+    @supports (interpolate-size: allow-keywords) {
+      interpolate-size: allow-keywords;
+
+      &::details-content {
+        height: 0;
+        overflow: clip;
+        transition:
+          height 0.45s var(--ease-out),
+          content-visibility 0.45s allow-discrete;
+      }
+
+      &[open]::details-content { height: auto; }
+    }
+
+    &[open] .group {
+      animation: group-in 0.4s var(--ease-out) both;
+      animation-delay: calc(var(--g) * 45ms);
+    }
+  }
+}
+
+@keyframes group-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+
+// <details> no aplica el gap del grid a su contenido, así que los grupos llevan margen.
+.group {
+  display: grid;
+  gap: var(--s-1);
+  margin-top: var(--s-3);
+}
+
+.groupName {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+
+  li {
+    padding: 1px var(--s-2);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: 0.78rem;
+  }
+}
+
+// Animación de entrada (ver Timeline.js). data-animate lo pone el componente cuando hay
+// JavaScript; con movimiento reducido muestra todas las etapas de golpe y sin transiciones.
+.timeline[data-animate] {
+  // El eje llega hasta el nodo de la última etapa mostrada.
+  &::before {
+    bottom: auto;
+    height: max(0px, var(--spine) - var(--dot-y));
+  }
+
+  // La rama crece desde el eje hacia el pliego.
+  .stage::after { transform-origin: left; }
+
+  @include from($bp-md) {
+    .stage:nth-child(odd)::after { transform-origin: right; }
+  }
+
+  @include motion {
+    &::before { transition: height 0.6s var(--ease-out); }
+    .stage::before { transition: transform 0.35s var(--ease-out) 0.4s; }
+    .stage::after { transition: transform 0.35s var(--ease-out) 0.6s; }
+
+    .sheet,
+    .year {
+      transition:
+        opacity 0.5s var(--ease-out) 0.75s,
+        translate 0.5s var(--ease-out) 0.75s;
+    }
+  }
+
+  .stage:not([data-shown]) {
+    &::before { transform: translate(-50%, -50%) scale(0); }
+    &::after { transform: scaleX(0); }
+
+    .sheet,
+    .year {
+      opacity: 0;
+      translate: 24px 0;
+    }
+
+    @include from($bp-md) {
+      &:nth-child(odd) .sheet,
+      &:nth-child(odd) .year { translate: -24px 0; }
+    }
+  }
+}
+
+// El nodo de la etapa actual late suavemente.
+.current::before {
+  @include motion {
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--lime) 15%, transparent); }
+}

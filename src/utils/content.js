@@ -1,150 +1,497 @@
-// Contenido editable del portfolio.
-// Todo lo marcado con TODO debe sustituirse por datos reales antes de publicar.
+// Contenido editable del portfolio. Fuente: CV de Javier Iranzo (FJIR).
+// Todo lo que pasa por `pending()` se muestra marcado como «pendiente» en la web
+// hasta que se sustituya por un texto real. No hay datos inventados.
+
+export const pending = (hint) => ({ pending: hint });
 
 export const site = {
   name: 'Javier Iranzo',
-  role: 'Senior QA Engineer',
-  title: 'Javier Iranzo — Senior QA Engineer',
+  fullName: 'Francisco Javier Iranzo Rebenaque',
+  initials: 'FJIR',
+  role: 'Ingeniero de QA y desarrollador',
+  title: 'Javier Iranzo (FJIR), ingeniero de QA y desarrollador',
   description:
-    'Calidad de software para empresas y particulares: estrategia de QA, automatización de pruebas y revisiones antes de lanzar.',
-  email: 'contacto@example.com', // TODO: email real
-  linkedin: 'https://www.linkedin.com/', // TODO: URL de perfil
-  availability: 'Disponible para nuevos proyectos', // TODO: ajustar según disponibilidad
+    'Portfolio de Javier Iranzo (FJIR): ingeniero de calidad de software con pasado de desarrollador full stack. Automatización de pruebas de APIs y webs, pruebas funcionales y requisitos.',
+  url: '', // TODO: dominio definitivo (p. ej. https://fjir.dev) para canonical y Open Graph
+  email: 'javieriranzo@proton.me',
+  phone: '+34 666 305 652',
+  whatsapp: 'https://wa.me/34666305652',
+  cv: '/cv/javier-iranzo-cv.pdf', // TODO: subir el PDF del CV a public/cv/
+  linkedin: 'https://www.linkedin.com/in/fjir',
+  github: 'https://github.com/javieriranzo',
 };
 
 export const nav = [
-  { href: '#problemas', label: 'Problemas' },
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#metodo', label: 'Método' },
-  { href: '#casos', label: 'Casos' },
-  { href: '#contacto', label: 'Contacto' },
+  { href: '/#experiencia', label: 'Experiencia' },
+  { href: '/#formacion', label: 'Formación' },
+  { href: '/#aficiones', label: 'Aficiones' },
+  { href: '/#contacto', label: 'Contacto' },
 ];
-
-// Comprobaciones ilustrativas del hero (no son resultados reales).
-export const runLog = [
-  { suite: 'checkout', name: 'el pago rechazado muestra un error comprensible' },
-  { suite: 'auth', name: 'la sesión caduca sin perder el formulario' },
-  { suite: 'api', name: 'el contrato v2 sigue siendo compatible con v1' },
-  { suite: 'a11y', name: 'el menú se puede usar solo con teclado' },
-  { suite: 'release', name: 'la regresión completa corre en cada PR' },
-];
-
-export const problems = [
-  {
-    fail: 'Cada release rompe algo que ya funcionaba',
-    fix: 'Una suite de regresión automatizada que se ejecuta antes de cada despliegue, no después.',
-  },
-  {
-    fail: 'Las pruebas manuales frenan el ritmo de entrega',
-    fix: 'Automatizar lo repetitivo y dejar las pruebas exploratorias para lo que de verdad aporta.',
-  },
-  {
-    fail: 'Hay tests, pero nadie se fía de ellos',
-    fix: 'Tests estables, legibles y con fallos que explican qué se ha roto y por qué.',
-  },
-  {
-    fail: 'Vas a lanzar y no sabes qué puede fallar',
-    fix: 'Una revisión previa al lanzamiento con un informe claro y priorizado por riesgo.',
-  },
-];
-
-export const services = {
-  empresas: {
-    label: 'Para empresas',
-    intro: 'Equipos de producto que necesitan entregar más rápido sin perder confianza en cada despliegue.',
-    items: [
+export const about = {
+  lead: 'Hola, soy Javier.',
+  paragraphs: [
+    'Soy ingeniero informático especializado en QA (aseguramiento de la calidad del software) y desarrollo full stack.',
+    'Actualmente, estoy centrado en la automatización de pruebas de API y aplicaciones web, trabajando para mejorar la calidad del software y hacer que los procesos de testing sean más eficientes y fiables. En este ámbito, también he empezado a liderar equipos, participando en la organización del trabajo y en la mejora de las prácticas de automatización.',
+    'Además, tengo experiencia en pruebas funcionales y validación de requisitos, colaborando con el área de negocio y los usuarios finales para asegurar que las aplicaciones cumplen con las necesidades y expectativas del proyecto.',
+    'A lo largo de mi trayectoria, he trabajado en proyectos de banca, industria, investigación y administración pública, siempre en entornos ágiles y en contacto directo con los equipos de desarrollo. Esto me ha permitido conocer distintas formas de trabajar y tener una visión global del proceso de desarrollo, con especial atención a la calidad del software.',
+  ],
+  // Aficiones, contadas como casos de prueba: el toque canalla de la página.
+  offDuty: {
+    title: 'Fuera del horario laboral',
+    cases: [
       {
-        title: 'Estrategia de QA',
-        text: 'Análisis del proceso actual, riesgos y una hoja de ruta de calidad realista para tu equipo.',
+        id: 'CP-01',
+        icon: '🍺',
+        title: 'Cerveza artesanal',
+        text: 'Pruebas exploratorias de IPAs, stouts y lo que haya en el grifo de temporada. Ningún lote se da por bueno sin una segunda ronda de validación.',
+        status: 'Pasa, con espuma',
       },
       {
-        title: 'Automatización de pruebas',
-        text: 'Pruebas E2E, de API y de regresión mantenibles, integradas en tu pipeline de CI/CD.',
+        id: 'CP-02',
+        icon: '🦇',
+        title: 'Fútbol (Valencia CF)',
+        text: 'Pruebas de regresión cada fin de semana en Mestalla: mismo escudo, mismos nervios y una fe que no hay bug que la rompa.',
+        status: 'Sufre, pero Amunt',
       },
       {
-        title: 'QA integrado en el equipo',
-        text: 'Acompañamiento continuo dentro de tus sprints: criterios de aceptación, pruebas y revisión.',
+        id: 'CP-03',
+        icon: '🏎️',
+        title: 'Fórmula 1',
+        text: 'Pruebas de rendimiento a más de 300 km/h. Los domingos de Gran Premio están bloqueados en el calendario y no admiten reuniones.',
+        status: 'Bloqueante',
       },
     ],
-    cta: { label: 'Hablemos de tu equipo', href: '#contacto-empresas' },
   },
-  particulares: {
-    label: 'Para particulares',
-    intro: 'Personas con una web, una app o un producto propio que quieren lanzarlo con tranquilidad.',
-    items: [
-      {
-        title: 'Revisión antes de lanzar',
-        text: 'Pruebo tu web o app como lo haría un usuario exigente y te entrego un informe accionable.',
-      },
-      {
-        title: 'Auditoría puntual',
-        text: 'Un diagnóstico acotado de un flujo concreto: pagos, registro, formularios o rendimiento percibido.',
-      },
-      {
-        title: 'Mentoría en QA',
-        text: 'Sesiones para aprender testing y automatización con casos prácticos de tu propio proyecto.',
-      },
-    ],
-    cta: { label: 'Cuéntame tu proyecto', href: '#contacto-particulares' },
-  },
+  photo: null, // { src, alt, width, height }
 };
 
-export const process = [
-  { id: 'diagnostico', title: 'Diagnóstico', text: 'Entiendo el producto, el equipo y dónde está el riesgo real.' },
-  { id: 'estrategia', title: 'Estrategia', text: 'Qué probar, cómo y en qué orden. Por escrito y priorizado.' },
-  { id: 'ejecucion', title: 'Ejecución', text: 'Pruebas y automatización integradas en vuestro flujo de trabajo.' },
-  { id: 'traspaso', title: 'Traspaso', text: 'Documentación y formación para que la calidad no dependa de mí.' },
+// Trayectoria en orden cronológico. Fechas del CV en formato 'AAAA-MM'; `end: null` es la actualidad.
+// `tools` son las competencias de la etapa, agrupadas en { group, items }; `highlights`, las
+// cinco que se ven sin desplegar (deben estar también en `tools`).
+// `logo` (opcional) es el logotipo oficial en /public/logos.
+// `brand` (opcional) es el color de la empresa, { bg, fg }, para el botón de competencias;
+// sin él, el botón va en tinta.
+export const experience = [
+  {
+    start: '2013-03',
+    end: '2013-06',
+    logo: { src: '/logos/gva.svg', alt: 'Generalitat Valenciana', width: 494, height: 236 },
+    brand: { bg: '#c80f2e', fg: '#fff' },
+    location: ['Valencia'],
+    period: '2013',
+    role: 'Junior Application Developer, prácticas',
+    place: 'Generalitat Valenciana',
+    text: 'Migración de bases de datos jurídicas de Microsoft Access a software libre con SQL, en un equipo de seis personas. Desarrollo en Java y C# y scripts en Bash para automatizar procesos internos, y soporte técnico y resolución de incidencias para usuarios de la Administración Pública.',
+    highlights: [
+      'Migración de bases de datos',
+      'SQL',
+      'Java',
+      'C#',
+      'Soporte técnico a usuarios',
+    ],
+    tools: [
+      {
+        group: 'Bases de datos',
+        items: [
+          'SQL',
+          'Microsoft Access',
+          'Migración de bases de datos',
+        ],
+      },
+      {
+        group: 'Programación y scripting',
+        items: [
+          'Java',
+          'C#',
+          'Bash Scripting',
+        ],
+      },
+      {
+        group: 'Sistemas y soporte',
+        items: [
+          'Soporte técnico a usuarios',
+          'Resolución de incidencias',
+        ],
+      },
+      {
+        group: 'Competencias profesionales',
+        items: [
+          'Trabajo en equipo',
+          'Resolución de problemas',
+          'Soporte a usuarios de la Administración Pública',
+        ],
+      },
+    ],
+  },
+  {
+    start: '2014-06',
+    end: '2018-01',
+    location: ['Valencia'],
+    period: '2014 – 2018',
+    role: 'Junior Full Stack Developer',
+    place: 'Freelance',
+    brand: { bg: 'var(--lime)', fg: 'var(--ink)' }, // sin empresa: el lima, la marca propia
+    text: 'Soluciones a medida para clientes, del análisis de requisitos a la puesta en producción. Sitios web con CMS como WordPress y PrestaShop, con temas y funcionalidades personalizados, interfaces web adaptables con Angular y Node.js, aplicaciones de escritorio con bases de datos y apps para Android.',
+    highlights: [
+      'Desarrollo de sitios web con CMS',
+      'WordPress',
+      'Angular',
+      'Diseño web adaptable (Responsive Design)',
+      'Análisis de requisitos del cliente',
+    ],
+    tools: [
+      {
+        group: 'Desarrollo web',
+        items: [
+          'HTML5',
+          'CSS3',
+          'JavaScript',
+          'Angular',
+          'Diseño y desarrollo de interfaces web',
+          'Diseño web adaptable (Responsive Design)',
+          'Integración de CMS',
+          'Integración con bases de datos',
+        ],
+      },
+      {
+        group: 'CMS y sitios web',
+        items: [
+          'Desarrollo de sitios web con CMS',
+          'Personalización de temas y funcionalidades',
+          'Gestión de contenidos web',
+          'Mantenimiento y actualización de sitios web',
+          'Publicación y puesta en producción de aplicaciones web',
+        ],
+      },
+      {
+        group: 'Trabajo con clientes',
+        items: [
+          'Análisis de requisitos del cliente',
+          'Recopilación y definición de necesidades',
+          'Planificación y desarrollo de soluciones a medida',
+        ],
+      },
+      {
+        group: 'Tecnologías y herramientas',
+        items: [
+          'Java',
+          'Node.js',
+          'MySQL',
+          'Bootstrap',
+          'WordPress',
+          'PrestaShop',
+          'Android Studio',
+          'Trello',
+        ],
+      },
+    ],
+  },
+  {
+    start: '2018-01',
+    end: '2021-04',
+    logo: { src: '/logos/ntt-data.svg', alt: 'NTT DATA', width: 340, height: 70 },
+    brand: { bg: '#0072bc', fg: '#fff' },
+    location: ['Valencia', 'Barcelona', 'Alicante'],
+    period: '2018 – 2021',
+    role: 'Full Stack Developer & Software QA Engineer',
+    place: 'NTT DATA Europe & Latam',
+    text: 'Desarrollo de microservicios y API en Java y de aplicaciones web con Angular para banca internacional y la Oficina Europea de Patentes. Pruebas unitarias, funcionales, de integración y de aceptación, validación de requisitos e historias de usuario, y seguimiento de la calidad del código con SonarQube. Validación de despliegues y guardias en producción, con diagnóstico de incidencias.',
+    highlights: [
+      'Java',
+      'Desarrollo de microservicios',
+      'Angular',
+      'Pruebas de integración',
+      'SonarQube',
+    ],
+    tools: [
+      {
+        group: 'Calidad y pruebas',
+        items: [
+          'Aseguramiento de la calidad del software (QA)',
+          'Análisis y diseño de casos de prueba',
+          'Pruebas funcionales',
+          'Pruebas unitarias',
+          'Pruebas de regresión',
+          'Pruebas de integración',
+          'Pruebas de aceptación',
+          'Pruebas de usabilidad y experiencia de usuario (UX/UI)',
+          'Validación de requisitos funcionales',
+          'Análisis de historias de usuario',
+          'Gestión y seguimiento de defectos',
+          'Análisis de causa raíz',
+          'Validación post-despliegue',
+          'Pruebas en entornos productivos y preproductivos',
+          'Calidad y mantenibilidad del código',
+        ],
+      },
+      {
+        group: 'Desarrollo backend',
+        items: [
+          'Java',
+          'Java EE',
+          'Desarrollo de microservicios',
+          'Diseño y desarrollo de servicios backend',
+          'Refactorización y optimización de código',
+          'Desarrollo de API y servicios web',
+          'Maven',
+          'MySQL',
+          'Programación orientada a objetos (POO)',
+          'Pruebas unitarias de backend',
+          'JUnit',
+          'Mockito',
+        ],
+      },
+      {
+        group: 'Desarrollo frontend',
+        items: [
+          'JavaScript',
+          'Angular',
+          'Node.js',
+          'HTML5',
+          'CSS3',
+          'Desarrollo de aplicaciones web',
+          'Pruebas unitarias de frontend',
+          'Jasmine',
+          'Karma',
+        ],
+      },
+      {
+        group: 'Calidad de código y monitorización',
+        items: [
+          'SonarQube',
+          'Kibana',
+          'Análisis de logs',
+          'Monitorización de aplicaciones',
+          'Análisis de métricas de rendimiento',
+          'Detección y diagnóstico de incidencias',
+        ],
+      },
+      {
+        group: 'Metodología y documentación',
+        items: [
+          'Metodologías ágiles',
+          'Scrum / Kanban',
+          'Jira',
+          'Documentación funcional y técnica',
+        ],
+      },
+    ],
+  },
+  {
+    start: '2021-04',
+    end: null,
+    logo: { src: '/logos/iti.svg', alt: 'ITI, Instituto Tecnológico de Informática', width: 444, height: 86 },
+    brand: { bg: '#ea8215', fg: 'var(--ink)' },
+    location: ['Valencia'],
+    period: '2021 – hoy',
+    role: 'Software QA Automation & Functional Engineer',
+    place: 'ITI, Instituto Tecnológico de Informática',
+    text: 'Estrategia de calidad y automatización de pruebas de API e interfaz con Playwright, Cypress y Wakamiti, integradas en CI/CD. Pruebas funcionales, de regresión y de UX/UI, validación de requisitos con negocio y usuarios finales, y diseño de pruebas asistido por IA generativa, en proyectos industriales y de investigación.',
+    highlights: [
+      'Estrategia de aseguramiento de la calidad',
+      'Automatización de pruebas de API',
+      'Playwright',
+      'Wakamiti',
+      'Pruebas asistidas por inteligencia artificial',
+    ],
+    tools: [
+      {
+        group: 'Competencias principales',
+        items: [
+          'Estrategia de aseguramiento de la calidad',
+          'Planificación y diseño de pruebas',
+          'Pruebas basadas en riesgos',
+          'Pruebas funcionales y no funcionales',
+          'Pruebas exploratorias',
+          'Pruebas de regresión',
+          'Pruebas de humo (smoke) y sanity',
+          'Pruebas end-to-end (E2E)',
+          'Diseño y ejecución de casos de prueba',
+          'Gestión de defectos y análisis de causa raíz',
+          'Agile / Scrum / Kanban',
+        ],
+      },
+      {
+        group: 'Automatización de pruebas',
+        items: [
+          'Diseño de frameworks de automatización',
+          'Automatización de pruebas de interfaz (UI)',
+          'Automatización de pruebas de API',
+          'Pruebas de integración',
+          'Gestión de datos de prueba',
+          'Page Object Model (POM)',
+          'BDD (Behavior-Driven Development)',
+          'Estrategia y mantenimiento de la automatización',
+        ],
+      },
+      {
+        group: 'Inteligencia artificial',
+        items: [
+          'Pruebas asistidas por inteligencia artificial',
+          'Diseño de pruebas mediante IA generativa',
+          'Generación de casos de prueba mediante IA',
+          'Generación inteligente de datos de prueba',
+        ],
+      },
+      {
+        group: 'Pruebas de API y backend',
+        items: [
+          'Pruebas de API REST',
+          'API Contract Testing',
+          'HTTP y servicios web',
+          'Pruebas de autenticación y autorización',
+          'Validación de SQL y bases de datos',
+        ],
+      },
+      {
+        group: 'Programación y scripting',
+        items: [
+          'TypeScript',
+          'JavaScript',
+          'Python',
+          'Java',
+          'SQL',
+          'Bash / scripts de shell',
+        ],
+      },
+      {
+        group: 'Herramientas de automatización y pruebas',
+        items: [
+          'Wakamiti',
+          'Playwright',
+          'Cypress',
+          'Selenium WebDriver',
+          'WebdriverIO',
+          'Postman',
+          'REST Assured',
+          'Cucumber',
+        ],
+      },
+      {
+        group: 'CI/CD y DevOps',
+        items: [
+          'Git',
+          'GitHub Actions',
+          'GitLab CI/CD',
+          'Jenkins',
+          'Docker',
+          'Pruebas continuas',
+          'Pipelines de pruebas automatizadas',
+          'Validación de builds y releases',
+        ],
+      },
+      {
+        group: 'Bases de datos y observabilidad',
+        items: [
+          'MySQL',
+          'Grafana',
+          'Kibana',
+        ],
+      },
+      {
+        group: 'Gestión de pruebas y colaboración',
+        items: [
+          'Jira',
+          'Xray',
+          'TestRail',
+          'Confluence',
+          'GitHub / GitLab',
+          'Colaboración en equipos ágiles',
+        ],
+      },
+      {
+        group: 'Competencias de perfil sénior',
+        items: [
+          'Ingeniería de calidad',
+          'Liderazgo técnico',
+          'Mentoría y transferencia de conocimiento',
+          'Colaboración con equipos multidisciplinares',
+          'Evaluación y mitigación de riesgos',
+          'Mejora continua',
+          'Métricas e informes de calidad',
+          'Evaluación de la preparación de releases',
+          'Comunicación con las partes interesadas',
+          'Pruebas shift-left',
+          'Responsabilidad sobre la calidad',
+        ],
+      },
+    ],
+  },
 ];
 
-// TODO: sustituir por proyectos reales. Mientras `draft` sea true se muestran como borrador.
-export const cases = [
+// En `title`, \n marca dónde parte la línea, para que los dos títulos ocupen dos líneas.
+export const education = [
   {
-    draft: true,
-    sector: 'Sector · por definir',
-    title: 'Título del caso de estudio',
-    context: 'Contexto del proyecto y del equipo.',
-    challenge: 'Problema de calidad que había que resolver.',
-    approach: 'Enfoque y decisiones técnicas tomadas.',
-    outcome: 'Resultado verificable. Sin cifras que no se puedan respaldar.',
-    tags: ['etiqueta', 'etiqueta'],
+    title: 'Grado en\nIngeniería Informática',
+    place: 'Universitat Jaume I',
+    location: 'Castellón',
+    period: '2014 – 2018',
+    logo: { src: '/logos/uji.png', width: 626, height: 104 },
   },
   {
-    draft: true,
-    sector: 'Sector · por definir',
-    title: 'Título del caso de estudio',
-    context: 'Contexto del proyecto y del equipo.',
-    challenge: 'Problema de calidad que había que resolver.',
-    approach: 'Enfoque y decisiones técnicas tomadas.',
-    outcome: 'Resultado verificable. Sin cifras que no se puedan respaldar.',
-    tags: ['etiqueta', 'etiqueta'],
+    title: 'Técnico Superior en Desarrollo\nde Aplicaciones Multiplataforma',
+    place: 'IES Serpis',
+    location: 'Valencia',
+    period: '2011 – 2013',
+    logo: { src: '/logos/ies-serpis.png', width: 158, height: 150 },
+  },
+];
+
+// Cursos del CV y certificaciones de LinkedIn, agrupados por tema.
+export const certifications = [
+  {
+    group: 'Programación y pruebas',
+    items: [
+      'Cypress: máster en automatización',
+      'Selenium con Java y Cucumber',
+      'Python avanzado',
+      'Java avanzado',
+      'AngularJS esencial',
+      'AngularJS práctico',
+      'Maquetación web',
+      'Fundamentos de programación y algoritmia',
+    ],
   },
   {
-    draft: true,
-    sector: 'Sector · por definir',
-    title: 'Título del caso de estudio',
-    context: 'Contexto del proyecto y del equipo.',
-    challenge: 'Problema de calidad que había que resolver.',
-    approach: 'Enfoque y decisiones técnicas tomadas.',
-    outcome: 'Resultado verificable. Sin cifras que no se puedan respaldar.',
-    tags: ['etiqueta', 'etiqueta'],
+    group: 'Metodologías ágiles',
+    items: [
+      'Scrum avanzado',
+      'Aprende Scrum',
+      'Scrum: roles',
+      'Scrum: antipatrones',
+      'Conviértete en especialista de metodologías ágiles para programación',
+      'Desarrollo ágil de software',
+      'Introducción a Agile',
+      'Fundamentos de Kanban para desarrollo de software',
+      'Fundamentos de Extreme Programming para desarrollo de software',
+      'Fundamentos de Lean para desarrollo de software',
+      'Aprende a usar la metodología Lean',
+    ],
   },
+  {
+    group: 'Calidad y herramientas',
+    items: [
+      'Fundamentos de Six Sigma',
+      'Fundamentos de Six Sigma: Green Belt',
+      'DevOps esencial',
+      'Workshop Introducción a Jira',
+    ],
+  },
+];
+
+// `level` es 'nativo' o un nivel del MCER (A1 … C2); de él sale la barra de cada tarjeta.
+// `flag` es el código de la bandera de la esquina de cada tarjeta (ver components/Flag).
+export const languages = [
+  { name: 'Español', level: 'nativo', flag: 'es' },
+  { name: 'Valenciano', level: 'nativo', flag: 'va' },
+  { name: 'Inglés', level: 'B2', flag: 'en' },
 ];
 
 export const contact = {
-  empresas: {
-    id: 'contacto-empresas',
-    label: 'Empresas',
-    title: 'Mejorar la calidad de tu producto',
-    text: 'Cuéntame el contexto de tu equipo y qué te preocupa. Te respondo para concertar una primera conversación.',
-    cta: 'Escribir como empresa',
-    subject: 'Consulta de empresa — QA',
-  },
-  particulares: {
-    id: 'contacto-particulares',
-    label: 'Particulares',
-    title: 'Revisar tu web o app',
-    text: 'Envíame el enlace y qué te gustaría comprobar. Te digo cómo puedo ayudarte y en qué plazo.',
-    cta: 'Escribir como particular',
-    subject: 'Revisión de proyecto personal',
-  },
+  topics: [
+    { id: 'proyecto', label: 'Un proyecto', subject: 'Un proyecto' },
+    { id: 'colaboracion', label: 'Una colaboración', subject: 'Una colaboración' },
+    { id: 'oportunidad', label: 'Una oportunidad laboral', subject: 'Una oportunidad laboral' },
+    { id: 'otra', label: 'Otra cosa', subject: 'Hola, Javier' },
+  ],
 };

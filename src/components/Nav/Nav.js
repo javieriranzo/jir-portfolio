@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { nav, site } from '@/utils/content';
 import styles from './Nav.module.scss';
 
+// Ids de las secciones a las que apunta el menú ('/#experiencia' → 'experiencia').
+const sectionIds = nav.map((item) => item.href.split('#')[1]);
+
+// Menú en una isla flotante centrada. La sección que ocupa el centro de la pantalla se marca
+// en verde botella azulado; en móvil la isla solo muestra FJIR y el botón, y los enlaces se
+// despliegan debajo.
 export default function Nav() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  const [current, setCurrent] = useState(null);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -20,15 +20,35 @@ export default function Nav() {
     return () => document.removeEventListener('keydown', onKey);
   }, [open]);
 
+  useEffect(() => {
+    const sections = sectionIds.map((id) => document.getElementById(id)).filter(Boolean);
+    if (!sections.length || !('IntersectionObserver' in window)) return undefined;
+
+    // Una franja fina en mitad de la pantalla: la sección que la cruza es la actual.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => entry.isIntersecting && setCurrent(entry.target.id));
+      },
+      { rootMargin: '-45% 0px -50% 0px' },
+    );
+    sections.forEach((section) => observer.observe(section));
+
+    // Por encima de la primera sección (la presentación) no hay ninguna marcada.
+    const onScroll = () => window.scrollY < sections[0].offsetTop - window.innerHeight / 2 && setCurrent(null);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
   return (
-    <header className={`${styles.bar} ${scrolled || open ? styles.scrolled : ''}`}>
-      <nav className={styles.inner} aria-label="Principal">
-        <a href="#inicio" className={styles.brand} onClick={() => setOpen(false)}>
-          <svg viewBox="0 0 20 20" aria-hidden="true" className={styles.mark}>
-            <path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" strokeWidth="2.4" />
-          </svg>
-          <span>{site.name}</span>
-        </a>
+    <header className={styles.bar}>
+      <nav className={`${styles.island} ${open ? styles.expanded : ''}`} aria-label="Principal">
+        <Link href="/" className={styles.brand} onClick={() => setOpen(false)}>
+          <span aria-hidden="true">{site.initials}</span>
+          <span className="visually-hidden">{site.name}, inicio</span>
+        </Link>
 
         <button
           type="button"
@@ -42,11 +62,16 @@ export default function Nav() {
         </button>
 
         <ul id="nav-links" className={`${styles.links} ${open ? styles.open : ''}`}>
-          {nav.map((item) => (
+          {nav.map((item, i) => (
             <li key={item.href}>
-              <a href={item.href} className={styles.link} onClick={() => setOpen(false)}>
+              <Link
+                href={item.href}
+                className={styles.link}
+                aria-current={current === sectionIds[i] ? 'location' : undefined}
+                onClick={() => setOpen(false)}
+              >
                 {item.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

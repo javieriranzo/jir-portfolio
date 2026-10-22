@@ -1,80 +1,145 @@
 @use '@/styles/mixins' as *;
 
 .section {
-  padding-block: var(--section-y);
+  position: relative;
+  overflow: hidden;
+  // Al menos una pantalla, como el resto de secciones, con el contenido centrado.
+  display: grid;
+  align-content: center;
+  min-height: 100svh;
+  // Petróleo oscuro: distinto del azul noche del pie y del menú, y de la familia del verde
+  // botella de los botones.
+  background: #0c2f33;
+  color: var(--paper);
+
+  // Sobre fondo oscuro el lápiz no tiene contraste: las marcas pasan a fluorescente.
+  --pencil: var(--lime);
+  --ink-dim: var(--night-dim);
 }
 
-.inner { @include container; }
+// Buzón enorme al fondo, por detrás del contenido: en gris y casi transparente, para que se
+// intuya sin competir con el texto.
+.watermark {
+  position: absolute;
+  right: 2vw;
+  bottom: -0.08em;
+  font-size: clamp(10rem, 4rem + 22vw, 24rem);
+  line-height: 1;
+  rotate: -10deg;
+  filter: grayscale(1);
+  opacity: 0.1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
 
-.paths {
+// Una sola columna: título y texto, y debajo el tema y el botón.
+.inner {
+  @include section;
+  position: relative;
+  display: grid;
+  gap: var(--s-7);
+}
+
+.intro {
   display: grid;
   gap: var(--s-5);
-
-  @include from($bp-md) {
-    grid-template-columns: 7fr 5fr;
-    align-items: end;
-  }
 }
-
-.path {
-  display: grid;
-  justify-items: start;
-  gap: var(--s-4);
-  padding: var(--s-6);
-  border-radius: var(--radius);
-
-  @include from($bp-md) { padding: var(--s-7); }
-}
-
-.lime {
-  background: var(--lime);
-  color: var(--ink);
-
-  @include from($bp-md) { min-height: 420px; align-content: end; }
-
-  .label { color: var(--ink); }
-
-  .text { color: rgb(10 17 32 / 0.78); }
-
-  :focus-visible { outline-color: var(--ink); }
-}
-
-.outline {
-  border: 1px solid var(--night-700);
-
-  .label { color: var(--lime); }
-
-  .text { color: var(--paper-dim); }
-}
-
-.label { @include mono-label; }
 
 .title {
-  font-size: var(--fs-xl);
-  max-width: 16ch;
+  @include display;
+  font-size: var(--fs-hero);
+  font-weight: 700;
 }
 
 .text {
-  max-width: 42ch;
-  margin-bottom: var(--s-3);
+  max-width: 46ch;
+  font-size: var(--fs-md);
+  line-height: 1.5;
 }
 
-.alt {
-  margin-top: var(--s-7);
-  color: var(--paper-dim);
+.compose {
+  display: grid;
+  gap: var(--s-6);
+  justify-items: start;
 }
 
-.link {
-  color: var(--paper);
-  background: linear-gradient(var(--lime), var(--lime)) 0 100% / 100% 1px no-repeat;
-  padding-bottom: 2px;
+.topics {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
 
-  @include motion {
-    transition: background-size 0.3s var(--ease-out), color 0.2s;
+.legend {
+  padding: 0;
+  margin-bottom: var(--s-4);
+  font-weight: 600;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.option {
+  position: relative;
+  cursor: pointer;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
   }
 
-  &:hover {
-    color: var(--ink);
-    background-size: 100% 100%;
+  span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--s-2) var(--s-4);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    border-radius: 999px;
+    color: var(--night-dim);
+    transition:
+      border-color 0.2s,
+      color 0.2s;
+  }
+
+  &:hover span {
+    border-color: var(--night-dim);
+    color: var(--paper);
+  }
+
+  // Sobre el petróleo, el verde botella se pierde: la opción elegida usa su versión clara.
+  input:checked + span {
+    border-color: #12a3a3;
+    color: var(--paper);
+    box-shadow: inset 0 0 0 1px #12a3a3;
+  }
+
+  input:focus-visible + span {
+    outline: 2px solid var(--lime);
+    outline-offset: 3px;
   }
 }
+
+// Mismo formato que el botón del CV: pastilla grande en su color que solo se levanta al pasar
+// el ratón. El borde va en el mismo verde y la sombra, en negro.
+.write {
+  @include pill-button;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-6);
+  border-color: var(--bottle);
+  background: var(--bottle);
+  font-size: var(--fs-base);
+  color: #fff;
+
+  &:hover,
+  &:focus-visible {
+    box-shadow: 2px 2px 0 #000;
+  }
+}
+
