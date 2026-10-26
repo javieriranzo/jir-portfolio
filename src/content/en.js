@@ -64,7 +64,7 @@ const en = {
     {
       title: 'Samuel Reina website',
       status: 'development',
-      text: 'Official website of singer Samuel Reina, a showcase for his music and artistic career.',
+      text: 'Official website of singer and voice actor Samuel Reina, a showcase for his music and artistic career.',
     },
     {
       title: 'Invoicely App',

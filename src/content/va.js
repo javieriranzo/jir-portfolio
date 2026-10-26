@@ -64,7 +64,7 @@ const va = {
     {
       title: 'Web de Samuel Reina',
       status: 'development',
-      text: 'Web oficial del cantant Samuel Reina, aparador de la seua música i la seua carrera artística.',
+      text: 'Web oficial del cantant i actor de doblatge Samuel Reina, aparador de la seua música i la seua carrera artística.',
     },
     {
       title: 'Invoicely App',

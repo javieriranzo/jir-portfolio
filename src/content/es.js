@@ -70,7 +70,7 @@ const es = {
     {
       title: 'Web de Samuel Reina',
       status: 'development',
-      text: 'Web oficial del cantante Samuel Reina, escaparate de su música y su carrera artística.',
+      text: 'Web oficial del cantante y actor de doblaje Samuel Reina, escaparate de su música y su carrera artística.',
     },
     {
       title: 'Invoicely App',
